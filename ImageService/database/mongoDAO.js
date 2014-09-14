@@ -1,6 +1,8 @@
 var async = require('async');
 var mongodb = require('mongodb');
 var assert = require('assert');
+var fs = require('fs');
+
 var dao = new MongoDAO();
 
 function MongoDAO(){
@@ -47,7 +49,6 @@ function MongoDAO(){
 					dao.imageCollection = results[2];
 					dao.policyCollection = results[3];
 					console.log("create collection success...");
-					console.log("imageCollection1 : "+dao.imageCollection);
 					callback(err);return;				
 				}
 			);
@@ -58,12 +59,16 @@ function MongoDAO(){
 		var tmp1 = {md5:smd5,type:stype,content:scontent};
 		var ObjectID = mongodb.ObjectID;
  		tmp1._id = new ObjectID();
-		console.log("imageCollection2 : "+dao.imageCollection);
+		console.log("image tobe insert : "+tmp1);
 		dao.imageCollection.insert(tmp1,{safe:true},function(err,result){
-			console.log('insert test image md5 = '+tmp1._id);
+			console.log('insert test image oid = '+tmp1._id);
 			callback(null,tmp1._id);return;	
 		});
 		
+	}
+
+	this.findImage = function(query,callback){
+		dao.imageCollection.findOne(query, callback);
 	}
 }
 
