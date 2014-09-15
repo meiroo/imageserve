@@ -4,7 +4,8 @@ var mongodb = require('mongodb');
 var BSON = mongodb.BSON;
 
 function ImageModel(dao){
-		this.insertImageWithoutCheck=function(smd5,stype,scontent,callback){
+		this.insertImageWithoutCheck=function(smd5,stype,imageData,callback){
+			var scontent = new BSON.serialize({bindata:imageData});
 			var tmp1 = {md5:smd5,type:stype,content:scontent};
 			var ObjectID = mongodb.ObjectID;
 	 		tmp1._id = new ObjectID();
@@ -15,14 +16,21 @@ function ImageModel(dao){
 			});	
 		}
 
-		this.insertImage=function(smd5,stype,scontent,callback){
+		this.insertImage=function(smd5,stype,imageData,callback){
+			if(!smd5){
+				var md5 = crypto.createHash('md5');
+				md5.update(imageData);
+				var md5str = md5.digest('hex');  //MD5值是5f4dcc3b5aa765d61d8327deb882cf99
+				smd5 = md5str;
+			}
+
 			dao.imageModel.checkMd5Exist(smd5,function(err,doc){
 				if(err){
 					callback(err,null);return;
 				}else if(doc){
 					callback(null,{"_id":doc._id,"md5":smd5});return;
 				}else{
-					dao.imageModel.insertImageWithoutCheck(smd5, stype, scontent, callback);return;
+					dao.imageModel.insertImageWithoutCheck(smd5, stype, imageData, callback);return;
 				}
 			});
 		}
@@ -47,8 +55,7 @@ function ImageModel(dao){
 			var md5str = md5.digest('hex');  //MD5值是5f4dcc3b5aa765d61d8327deb882cf99
 			console.log(md5str);
 
-			var content = new BSON.serialize({bindata:imageData});
-			dao.imageModel.insertImage(md5str,'jpg',content,callback);return;
+			dao.imageModel.insertImage(md5str,'jpg',imageData,callback);return;
 		}
 
 		this.findImage = function(query,callback){

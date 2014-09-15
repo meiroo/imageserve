@@ -2,6 +2,7 @@ var async = require('async');
 var mongodb = require('mongodb');
 var assert = require('assert');
 var ImageModel = require('./ImageModel');
+var PathModel = require('./PathModel');
 
 
 var dao = new MongoDAO();
@@ -49,11 +50,13 @@ function MongoDAO(){
 						callback(err);return;
 					}
 					dao.userCollection = results[0];
+
 					dao.pathCollection = results[1];
+					dao.pathModel = new PathModel(dao);
 
 					dao.imageCollection = results[2];
 					dao.imageModel = new ImageModel(dao);
-					
+
 					dao.policyCollection = results[3];
 					console.log("create collection success...");
 					callback(err);return;				
