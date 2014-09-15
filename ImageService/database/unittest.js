@@ -3,7 +3,7 @@ var mongodb = require('mongodb');
 var fs = require('fs');
 var dao = require('./mongoDAO');
 var BSON = mongodb.BSON;
-
+var crypto = require('crypto');
 
 
 
@@ -16,33 +16,18 @@ async.series(
 			dao.createCollection(callback);
 		},
 		function(callback){
-			var imageData = fs.readFileSync('./image.jpg');
-			console.log(imageData);
-			var content = new BSON.serialize({bindata:imageData});
-
-			dao.insertImage('md5xxxxxxxx','jpg',content,callback);
-
-			var des = new BSON.deserialize(content);
-			console.log(des);
+			dao.saveImageToDB('./image.jpg',callback);
 		}
 	],
 
 	function(err,results){
 		if(err)
 			console.log("Nooooooo! "+ err);
-		
 
-		dao.findImage({_id:mongodb.ObjectID('5415a3d36021ab942ca20df0')},function(err,doc){
-			var content = new BSON.deserialize(doc.content.buffer);
-			console.log(content);
-			fs.writeFileSync('test.jpg', content.bindata.buffer,"binary");
-			console.log("all test success...");
-
+		var insertObj = results[2];
+		console.log('Image inserted id = ',insertObj);
+		dao.writeImageFromDB({md5:'f3cf7e65f37cede3703957b44065fcb9'},function(err,filename){
+			console.log(filename);
 		});
-
-		dao.findImage({type:'jpg'},function(err,doc){
-			//console.log(doc);
-		});
-
 	}
 );
