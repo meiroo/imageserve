@@ -647,9 +647,9 @@
 												</div>
 
 												<div class="modal-body">
-													<form action="./dummy.html" class="dropzone dz-clickable" id="dropzone">
+													<form action="action="/file-upload" method="post" class="dropzone dz-clickable" id="dropzone">
 														<div class="fallback">
-															<input name="file" type="file" multiple="" />
+															<input id="dropzone-input" name="file" type="file" multiple="" />
 														</div>
 													</form>
 												</div>
@@ -976,6 +976,7 @@
 		<script src="./js/ace/ace.settings-skin.js"></script>
 		<script src="./js/ace/ace.widget-on-reload.js"></script>
 		<script src="./js/ace/ace.searchbox-autocomplete.js"></script>
+    <script src="./index.js"></script>
 
 		<!-- inline scripts related to this page -->
 		<script type="text/javascript">
@@ -1008,6 +1009,7 @@
 	$("#cboxLoadingGraphic").html("<i class='ace-icon fa fa-spinner orange'></i>");//let's add a custom loading icon
 
 
+
 	Dropzone.autoDiscover = false;
 	try {
 	  var myDropzone = new Dropzone("#dropzone" , {
@@ -1028,6 +1030,8 @@
 	} catch(e) {
 	  alert('Dropzone.js does not support older browsers!');
 	}
+
+  
 })
 		</script>
 
