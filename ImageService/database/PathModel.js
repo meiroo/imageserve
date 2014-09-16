@@ -52,7 +52,7 @@ function PathModel(dao){
 						console.log("No err, but return null...")
 						callback(null,null);return;
 					}
-					var path = {'url':url,type:stype,image:image._id,policy:null};
+					var path = {'url':url,type:stype,image:image.md5,policy:null};
 					dao.pathCollection.insert(path,{safe:true},function(err,result){
 						console.log('insert path = '+path);
 						if(err){
@@ -80,6 +80,20 @@ function PathModel(dao){
 
 	this.getCount = function(callback){
 		return dao.pathCollection.count(callback);
+	}
+
+	this.findSubItemByFolder = function(url,callback){
+		
+		if(url=='/')
+			url = '^/[a-zA-Z0-9._-]+$';
+		else
+			url = '^' + url + '/[a-zA-Z0-9._-]+$';
+
+		console.log(url);
+		console.log('------------');
+		var re = new RegExp(url,'i');  
+		//url = url.replace(/\\/g,"/");
+		dao.pathCollection.find({'url':re}, callback);
 	}
 }
 
