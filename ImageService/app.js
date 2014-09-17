@@ -6,8 +6,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var busboy = require('connect-busboy');
 
-var routes = require('./routes/index');
+var index = require('./routes/index');
 var upload = require('./routes/file-upload');
+var pathapi = require('./routes/pathapi');
 
 //var dtest = require('./database/unittest');
 
@@ -26,8 +27,9 @@ app.use(busboy());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+app.use('/', index);
 app.use('/file-upload', upload);
+app.use('/getpath',pathapi);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

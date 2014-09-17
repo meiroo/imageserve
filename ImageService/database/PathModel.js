@@ -1,4 +1,6 @@
 var path = require('path');
+var mongodb = require('mongodb');
+var BSON = mongodb.BSON;
 
 function PathModel(dao){
 	this.checkParentURL = function(url,callback){
@@ -66,6 +68,33 @@ function PathModel(dao){
 		});
 	}
 
+	this.findImagePathContent = function(url,callback){
+		dao.pathModel.findPath(url,function(err,doc){
+			if(err){
+				callback(err,null);return;
+			}else if(doc){
+				console.log('---------find image content-------');
+				dao.imageModel.findImage({md5:doc.image},function(err,image){
+		      		if(err){
+		      			callback(err,null);return;
+		      		}else if(image){
+		      			
+		      			var content = new BSON.deserialize(image.content.buffer);
+		      			var imagedata = content.bindata.buffer;
+		      			//console.log(imagedata);
+		      			console.log('return image content data...');
+		      			callback(null,imagedata);return;
+
+		      		}else{
+		      			callback(null,null);return;
+		      		}
+	      		});
+			}else{
+				callback(null,null);return;
+			}
+		});
+	}
+
 	this.findPath = function(url,callback){
 		dao.pathCollection.findOne({"url":url}, callback);
 	}
@@ -85,9 +114,9 @@ function PathModel(dao){
 	this.findSubItemByFolder = function(url,callback){
 		
 		if(url=='/')
-			url = '^/[a-zA-Z0-9._-]+$';
+			url = '^/[a-zA-Z0-9.=,&_-]+$';
 		else
-			url = '^' + url + '/[a-zA-Z0-9._-]+$';
+			url = '^' + url + '/[a-zA-Z0-9.=,&_-]+$';
 
 		console.log(url);
 		console.log('------------');

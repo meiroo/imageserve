@@ -297,5 +297,14 @@ describe('Mongodb PATH test', function() {
 				}
 			);
    	 	});
+
+		it('find img content exists', function(done) {
+   	 		dao.pathModel.findImagePathContent('/user1/image/image3/bb.jpg',function(err,imagedata){
+      			should.not.exist(err);
+      			imagedata.should.not.equal(null);
+      			console.log(imagedata);
+      			done();
+      		});
+   	 	});
 	});
 });

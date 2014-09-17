@@ -9,6 +9,23 @@ var dao = new MongoDAO();
 
 function MongoDAO(){
 
+	this.init = function(callback){
+		async.series(
+			[
+				function(callback){
+					dao.connect(callback);
+				},
+				function(callback){
+					dao.createCollection(callback);
+				}
+			],
+
+			function(err,results){
+				callback(err,results);
+			}
+		);
+	}
+	
 	this.connect =function(callback){
 		var err = false;
 		dao.server = new mongodb.Server('localhost',27017,{auto_reconnect:true});
