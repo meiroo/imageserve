@@ -50,7 +50,7 @@ $(document).ready(function($) {
 			});
 		  },
 		  error: function(xhr, textStatus, errorThrown) {
-		    //called when there is an error
+		    console.log(errorThrown);
 		  }
 		});
 	}
@@ -100,10 +100,16 @@ $(document).ready(function($) {
 
 		});
 
-		myDropzone.on("complete", function(file, xhr, formData) {
+		myDropzone.on("success", function(file, response) {
   			//alert('complete..')
+  			console.log(response);
   			showItemsFromFolder(current_url);
-  			
+		});
+
+		myDropzone.on("error", function(file, errmsg) {
+  			//alert('complete..')
+  			console.log(errmsg);
+  			showItemsFromFolder(current_url);
 		});
 
 	} catch(e) {

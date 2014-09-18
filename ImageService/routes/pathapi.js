@@ -10,7 +10,9 @@ router.get('/folder', function(req, res) {
 	console.log('enter folder');
 	dao.init(function(err,results){
 		if(err){
-			console.log("ERRRRRRRRRRRRRRRR");res.sendfile(404);
+			console.log("ERRRRRRRRRRRRRRRR");
+			res.status(500).send({ error: 'DataBase init error!'+err });
+            res.end();
 		}
 		console.log(req.query);
 		var url = '/';
@@ -18,13 +20,20 @@ router.get('/folder', function(req, res) {
 			url = req.query.url;
 
 		dao.pathModel.findSubItemByFolder(url,function(err,items){
- 			should.not.exist(err);
- 			items.toArray(function(err,itemarray){
- 				if(err){
- 					res.sendfile(404);console.log("ERRRRRRRRRRRRRRRR");return;
- 				}
- 				res.send({items:itemarray});res.end();			
- 			});
+ 			if(err){
+ 				res.status(500).send({ error: 'findSubItemByFolder error!'+err.toString() });
+            	res.end();
+ 			}else{
+ 				items.toArray(function(err,itemarray){
+	 				if(err){
+	 					res.status(500).send({ error: 'items.toArray error!'+err });
+	            		res.end();
+	 				}
+	 				res.send({items:itemarray});res.end();			
+ 				});
+ 			}
+
+ 			
  			
  		});        
 	});	
@@ -33,7 +42,8 @@ router.get('/folder', function(req, res) {
 router.get('/image', function(req, res) {
 	dao.init(function(err,results){
 		if(err){
-			res.sendfile(404);console.log("ERRRRRRRRRRRRRRRR");
+			res.status(500).send({ error: 'DataBase init error!'+err });
+            res.end();
 		}
 		
 		console.log(req.query);
@@ -42,16 +52,21 @@ router.get('/image', function(req, res) {
 			url = req.query.url;
 		console.log("****get image path******url= "+url);
 		dao.pathModel.findImagePathContent(url,function(err,imagedata){
- 			//res.set('Content-Type', "image/JPEG");
-    		//res.send('back');
-
-			// Initiate the source
-			var bufferStream = new stream.Transform();
-			bufferStream.push(imagedata);
-			bufferStream.pipe(res);
-			bufferStream.end();
-			//res.send('ok');
-			//res.end();
+ 			if(err){
+ 				res.status(500).send({ error: 'findImagePathContent error!'+err });
+            	res.end();
+ 			}
+ 			if(imagedata){
+ 				// Initiate the source
+				var bufferStream = new stream.Transform();
+				bufferStream.push(imagedata);
+				bufferStream.pipe(res);
+				bufferStream.end();
+ 			}else{
+ 				res.status(500).send({ error: 'Cannot find this Image!'});
+            	res.end();
+ 			}
+			
  		});        
 	});	
 });

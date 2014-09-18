@@ -27,8 +27,9 @@ router.post('/', function(req, res) {
         if(req.params.body && req.params.body.parenturl){
         	parenturl = req.params.body.parenturl;
         }else{
-        	console.log("ERRRRRRRRRRRRRRRR");res.sendFile(404);
-
+        	console.log("ERRRRRRRRRRRRRRRR");
+            res.status(500).send({ error: 'I need the parenturl parameter!' });
+            res.end();
         }
         //console.log(req);
         var chunks=[];
@@ -45,16 +46,17 @@ router.post('/', function(req, res) {
         	dao.pathModel.addPathImage(parenturl,filename,null,'image/jpg',imageData,function(err,item){
 	      		if(err){
 	      			console.log("file-upload addPathImage ERRRRRRRRRRRRRRRR");
-	      			res.sendfile(404);
+	      			res.status(500).send({ error: 'addPathImage error!'+err });
+                    res.end();
 	      		}
 	      		dao.pathModel.findPath(item[0].url,function(err,path){
 	      			if(path){
-	      				res.redirect('back');
+	      				res.status(200).send({ path: item[0]});
 	      				res.end();
 	      			}
 	      			else{
-	      				console.log("file-upload addPathImage findPath ERRRRRRRRRRRRRRRR");
-	      				res.sendfile(404);
+	      				res.status(500).send({ error: 'cannot find the upload file!' });
+                        res.end();
 	      			}
 	      		});
 	      		

@@ -28,8 +28,33 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
+
+//  POST route: /file-upload
+//  parameter: 
+//         file (from dropzone form)
+//         parenturl (upload to which directory)
+//  success return: {path:pathobject}
+//  error return:{error:errmsg}
 app.use('/file-upload', upload);
+
+
+//  GET route: /getpath/folder?url=/
+//  parameter:
+//         url (the folder path as:  /user1/image)
+//  success return: {items:[pathobj1,pathobj2,pathobj3...]}
+//  noneExisted folder return: {error:cannot find this folder!}
+//  error  return:{error:errmsg}
+
+
+//  GET route: /getpath/image?url=/index.gif
+//  parameter:
+//         url (the image path as /index.gif)
+//  success return: image content pipe to request
+//  noneExisted image return:{error:cannot find this image!}
+//  error return:{error:errmsg}
 app.use('/getpath',pathapi);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

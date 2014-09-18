@@ -111,8 +111,9 @@ function PathModel(dao){
 		return dao.pathCollection.count(callback);
 	}
 
-	this.findSubItemByFolder = function(url,callback){
+	this.findSubItemByFolder = function(folderurl,callback){
 		
+		var url = folderurl;
 		if(url=='/')
 			url = '^/[^/]+$';
 		else
@@ -120,9 +121,21 @@ function PathModel(dao){
 
 		console.log(url);
 		console.log('------------');
-		var re = new RegExp(url,'i');  
-		//url = url.replace(/\\/g,"/");
-		dao.pathCollection.find({'url':re}, callback);
+
+		dao.pathModel.findPath(folderurl,function(err,folder){
+			if(err){
+				callback(err,null);return;
+			}else if((folder && folder.type == 'folder')||folderurl=='/'){
+				var re = new RegExp(url,'i');  
+				//url = url.replace(/\\/g,"/");
+				dao.pathCollection.find({'url':re}, callback);
+			}else{
+				//no such folder
+				callback("Cannot find this folder!",null);
+			}
+		});
+
+		
 	}
 }
 
