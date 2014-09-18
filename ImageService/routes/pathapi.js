@@ -1,19 +1,21 @@
 var express = require('express');
 var router = express.Router();
-var dao = require('../database/mongoDAO');
+var MongoDAO = require('../database/mongoDAO');
 var path = require('path');
 var should = require('should');
 var stream = require("stream");
+var util = require('./util');
+var dao = new MongoDAO();
 
 /* GET folder item */
 router.get('/folder', function(req, res) {
 	console.log('enter folder');
 	dao.init(function(err,results){
 		if(err){
-			console.log("ERRRRRRRRRRRRRRRR");
-			res.status(500).send({ error: 'DataBase init error!'+err });
-            res.end();
+            util.sendError(res,err,dao);
+            return;
 		}
+		console.log('after sendError');
 		console.log(req.query);
 		var url = '/';
 		if(req.query.url)
@@ -29,7 +31,7 @@ router.get('/folder', function(req, res) {
 	 					res.status(500).send({ error: 'items.toArray error!'+err });
 	            		res.end();
 	 				}
-	 				res.send({items:itemarray});res.end();			
+	 				res.send({items:itemarray});res.end();
  				});
  			}
 

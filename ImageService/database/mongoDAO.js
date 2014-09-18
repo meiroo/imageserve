@@ -6,7 +6,7 @@ var PathModel = require('./PathModel');
 
 
 function MongoDAO(){
-
+	var dao = this;
 	this.connect =function(callback){
 		var err = false;
 		this.server = new mongodb.Server('localhost',27017,{auto_reconnect:true});
@@ -47,15 +47,15 @@ function MongoDAO(){
 						console.log("Nooooooo! "+ err);
 						callback(err);return;
 					}
-					this.userCollection = results[0];
+					dao.userCollection = results[0];
 
-					this.pathCollection = results[1];
-					this.pathModel = new PathModel(dao);
+					dao.pathCollection = results[1];
+					dao.pathModel = new PathModel(dao);
 
-					this.imageCollection = results[2];
-					this.imageModel = new ImageModel(dao);
+					dao.imageCollection = results[2];
+					dao.imageModel = new ImageModel(dao);
 
-					this.policyCollection = results[3];
+					dao.policyCollection = results[3];
 					console.log("create collection success...");
 					callback(err);return;				
 				}
@@ -64,12 +64,10 @@ function MongoDAO(){
 	}
 
 	this.init = function(callback){
-		console.log(this);
+		//console.log(this);
 		console.log('-----------');
-		var dao = this;
-
 		console.log('-----------');
-		console.log(dao);
+		//console.log(dao);
 		async.series(
 			[
 				function(callback){
@@ -87,6 +85,7 @@ function MongoDAO(){
 	}
 
 	this.finish = function(){
+		console.log('db.close!');
 		this.db.close();
 	}
 }

@@ -8,14 +8,13 @@ var mongodb = require('mongodb');
 var BSON = mongodb.BSON;
 
 var dao = new MongoDAO();
-console.log(dao);
-dao.init(function(err,result){});
 
 describe('Mongodb unit test', function() {
 	describe('#init mongoDAO', function() {
 		it('error:get collection without connect', function(done) {
 	      	dao.init(function(err,result){
 	      		should.not.exist(err);
+	      		done();
 	      	});
    	 	});
  	});
@@ -112,6 +111,13 @@ describe('Mongodb unit test', function() {
     	});
 	});
   
+});
+
+describe('#close mongoDAO', function() {
+	it('close connect', function(done) {
+	  	dao.finish();
+	  	done();
+	});
 });
 	
 
