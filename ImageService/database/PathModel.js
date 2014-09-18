@@ -114,9 +114,9 @@ function PathModel(dao){
 	this.findSubItemByFolder = function(url,callback){
 		
 		if(url=='/')
-			url = '^/[a-zA-Z0-9.=,&_-]+$';
+			url = '^/[^/]+$';
 		else
-			url = '^' + url + '/[a-zA-Z0-9.=,&_-]+$';
+			url = '^' + url + '/[^/]+$';
 
 		console.log(url);
 		console.log('------------');

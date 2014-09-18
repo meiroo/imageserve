@@ -167,6 +167,8 @@ describe('Mongodb PATH test', function() {
    	 		dao.pathModel.findPath('/user1/image/image3',function(err,path){
       			should.not.exist(err);
       			should.exist(path);
+      			console.log("******************************");
+      			console.log(path.type);
       			path.type.should.equal('folder');
       			done();
       		});
@@ -306,5 +308,80 @@ describe('Mongodb PATH test', function() {
       			done();
       		});
    	 	});
+   	 	
+
+		it('add NAME_CONTAIN_SPACE img /user1/image/image 5.jpg', function(done) {
+   	 		var imageData = fs.readFileSync('./image/image5.jpg');
+	      	dao.pathModel.addPathImage('/user1/image','image 5.jpg',null,'image/jpg',imageData,function(err,item){
+	      		should.not.exist(err);
+	      		should.exist(item[0]);
+	      		dao.pathModel.findPath('/user1/image/image 5.jpg',function(err,path){
+	      			should.not.exist(err);
+	      			should.exist(path);
+	      			should.not.exist(path.policy);
+	      			should.exist(path.image);
+	      			done();
+	      		});
+	      		
+	      	});
+   	 	});
+
+		
+   	 	it('add NAME_CONTAIN_CHINESE /user1/image/image5 - 副本.jpg', function(done) {
+   	 		var imageData = fs.readFileSync('./image/image5.jpg');
+	      	dao.pathModel.addPathImage('/user1/image','image5 - 副本.jpg',null,'image/jpg',imageData,function(err,item){
+	      		should.not.exist(err);
+	      		should.exist(item);
+				console.log('----------------------------');
+	      		console.log(item);
+	      		dao.pathModel.findPath('/user1/image/image5 - 副本.jpg',function(err,path){
+	      			should.not.exist(err);
+	      			should.exist(path);
+	      			should.not.exist(path.policy);
+	      			should.exist(path.image);
+	      			done();
+	      		});
+	      		
+	      	});
+   	 	});
+
+   	 	it('add folder_CONTAIN_SPACE_CHINESE /user1/image/image图片 3', function(done) {
+	      	dao.pathModel.addPathFolder('/user1/image','image图片 3',function(err,item){
+	      		console.log('---------------------');
+	      		console.log(item.url);
+	      		should.not.exist(err);
+	      		should.exist(item);
+	      		//should.exist(item.type);
+	      		//('folder').should.equal(item.type);
+	      		
+	      		dao.pathModel.findPath('/user1/image/image图片 3',function(err,path){
+	      			should.not.exist(err);
+	      			should.exist(path);
+	      			path.type.should.equal('folder');
+	      			done();
+	      		});
+	      		
+	      	});
+   	 	});
+
+
+   	 	it('add folder_CONTAIN_SPECIAL_CHARACTOR /user1/image/中文字符u=4292752432,3282675515&fm=21&gp=0中文字符.jpg', function(done) {
+	      	var imageData = fs.readFileSync('./image/中文字符u=4292752432,3282675515&fm=21&gp=0中文字符.jpg');
+	      	dao.pathModel.addPathImage('/user1/image','中文字符u=4292752432,3282675515&fm=21&gp=0中文字符.jpg',null,'image/jpg',imageData,function(err,item){
+	      		should.not.exist(err);
+	      		should.exist(item);
+				console.log('----------------------------');
+	      		console.log(item);
+	      		dao.pathModel.findPath('/user1/image/中文字符u=4292752432,3282675515&fm=21&gp=0中文字符.jpg',function(err,path){
+	      			should.not.exist(err);
+	      			should.exist(path);
+	      			should.not.exist(path.policy);
+	      			should.exist(path.image);
+	      			done();
+	      		});
+	      		
+	      	});
+   	 	});
+   	 	/**/
 	});
 });

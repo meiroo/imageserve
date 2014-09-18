@@ -35,12 +35,12 @@ router.get('/image', function(req, res) {
 		if(err){
 			res.sendfile(404);console.log("ERRRRRRRRRRRRRRRR");
 		}
-		console.log("***********get image path**********");
+		
 		console.log(req.query);
 		var url = '/';
 		if(req.query.url)
 			url = req.query.url;
-
+		console.log("****get image path******url= "+url);
 		dao.pathModel.findImagePathContent(url,function(err,imagedata){
  			//res.set('Content-Type', "image/JPEG");
     		//res.send('back');

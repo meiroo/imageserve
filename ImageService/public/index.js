@@ -14,8 +14,8 @@ $(document).ready(function($) {
     	  		//
     	  		//
     	  		li.find(".url").addClass('folderItem');
-    	  		li.find("a img").attr("src","/getpath/image"+"?url="+item.url);
-    	  		li.find(".url").attr('href',"/getpath/image"+"?url="+item.url);
+    	  		li.find("a img").attr("src","/getpath/image"+"?url="+encodeURIComponent(item.url));
+    	  		li.find(".url").attr('href',"/getpath/image"+"?url="+encodeURIComponent(item.url));
     	  	}
     	  	//li.find(".url").attr('href',item.url);
     	  	li.find("a .text .inner").text(item.url);

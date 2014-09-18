@@ -22,6 +22,8 @@ router.post('/', function(req, res) {
         console.log(extName);
 
         var parenturl = null;
+        console.log("req.params.body:" + req.params.body);
+        console.log("req.params.body.parenturl:" + req.params.body.parenturl);
         if(req.params.body && req.params.body.parenturl){
         	parenturl = req.params.body.parenturl;
         }else{
@@ -40,18 +42,18 @@ router.post('/', function(req, res) {
         	var imageData = Buffer.concat(chunks,size);
         	//console.log(imageData);
         	
-        	dao.pathModel.addPathImage(parenturl,filename,null,'image/jpg',imageData,function(err,callback){
+        	dao.pathModel.addPathImage(parenturl,filename,null,'image/jpg',imageData,function(err,item){
 	      		if(err){
-	      			console.log("ERRRRRRRRRRRRRRRR");
+	      			console.log("file-upload addPathImage ERRRRRRRRRRRRRRRR");
 	      			res.sendfile(404);
 	      		}
-	      		dao.pathModel.findPath(parenturl+'/'+filename,function(err,path){
+	      		dao.pathModel.findPath(item[0].url,function(err,path){
 	      			if(path){
 	      				res.redirect('back');
 	      				res.end();
 	      			}
 	      			else{
-	      				console.log("ERRRRRRRRRRRRRRRR");
+	      				console.log("file-upload addPathImage findPath ERRRRRRRRRRRRRRRR");
 	      				res.sendfile(404);
 	      			}
 	      		});
