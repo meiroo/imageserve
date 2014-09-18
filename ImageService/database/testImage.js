@@ -1,5 +1,5 @@
 var async = require('async');
-var dao = require('./mongoDAO');
+var MongoDAO = require('./mongoDAO');
 var assert = require('assert');
 var should = require('should');
 var fs = require('fs');
@@ -7,41 +7,17 @@ var crypto = require('crypto');
 var mongodb = require('mongodb');
 var BSON = mongodb.BSON;
 
+var dao = new MongoDAO();
+console.log(dao);
+dao.init(function(err,result){});
 
 describe('Mongodb unit test', function() {
 	describe('#init mongoDAO', function() {
 		it('error:get collection without connect', function(done) {
-	      	async.series(
-				[
-					function(callback){
-						dao.createCollection(callback);
-					}
-				],
-
-				function(err,results){
-					should.exist(err);
-					done();
-				}
-			);
+	      	dao.init(function(err,result){
+	      		should.not.exist(err);
+	      	});
    	 	});
-
-		it('normal connect and collection', function(done) {
-	      	async.series(
-				[
-					function(callback){
-						dao.connect(callback);
-					},
-					function(callback){
-						dao.createCollection(callback);
-					}
-				],
-
-				function(err,results){
-					should.not.exist(err);
-					done();
-				}
-			);	      
-	    });
  	});
 
  	describe('#clear image ', function() {
