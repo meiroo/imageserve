@@ -17,12 +17,16 @@ function ImageModel(d){
 			});	
 		}
 
+		this.generateMD5=function(imageData){
+			var md5 = crypto.createHash('md5');
+			md5.update(imageData);
+			var md5str = md5.digest('hex');  //MD5值是5f4dcc3b5aa765d61d8327deb882cf99
+			return md5str;
+		}
+
 		this.insertImage=function(smd5,stype,imageData,callback){
 			if(!smd5){
-				var md5 = crypto.createHash('md5');
-				md5.update(imageData);
-				var md5str = md5.digest('hex');  //MD5值是5f4dcc3b5aa765d61d8327deb882cf99
-				smd5 = md5str;
+				smd5 = this.generateMD5(imageData);
 			}
 
 			dao.imageModel.checkMd5Exist(smd5,function(err,doc){
@@ -37,15 +41,7 @@ function ImageModel(d){
 		}
 
 		this.checkMd5Exist = function(smd5,callback){
-			dao.imageModel.findImage({md5:smd5},function(err,doc){
-				if(err){
-					callback(err,null);return;
-				}else if(doc){
-					callback(null,doc);return;
-				}else{
-					callback(null,null);return;
-				}
-			});
+			dao.imageModel.findImage({md5:smd5},callback);
 		}
 
 		this.saveImageToDB = function(path,callback){

@@ -45,7 +45,7 @@ $(document).ready(function($) {
 		    $.get('/template/image-ul-li.html', null, function(htmldata, textStatus, xhr) {
 		    	$(".page-content-area ul").empty();
 		    	$.each(data.items, function(index,item) {		    	
-		    		showSingleItem(item,htmldata);	
+		    		showSingleItem(item,htmldata);
 		    	});
 			});
 		  },
@@ -124,6 +124,7 @@ $(document).ready(function($) {
   			//alert('complete..')
   			console.log(response);
   			showItemsFromFolder(current_url);
+  			//window.location.reload(true);	
 		});
 
 		myDropzone.on("error", function(file, errmsg) {

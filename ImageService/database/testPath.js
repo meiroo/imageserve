@@ -103,8 +103,12 @@ describe('Mongodb PATH test', function() {
 
    	 	it('add img /user1/image/image3/bb.jpg', function(done) {
    	 		var imageData = fs.readFileSync('./image/image5.jpg');
-	      	dao.pathModel.addPathImage('/user1/image/image3','bb.jpg',null,'image/jpg',imageData,function(err,callback){
+	      	dao.pathModel.addPathImage('/user1/image/image3','bb.jpg',null,'image/jpg',imageData,function(err,addedpath){
 	      		should.not.exist(err);
+	      		should.exist(addedpath);
+	      		should.exist(addedpath.type);
+	      		should.not.exist(addedpath.policy);
+
 	      		dao.pathModel.findPath('/user1/image/image3/bb.jpg',function(err,path){
 	      			should.not.exist(err);
 	      			path.should.not.equal(null);
@@ -287,9 +291,29 @@ describe('Mongodb PATH test', function() {
 
 		it('add NAME_CONTAIN_SPACE img /user1/image/image 5.jpg', function(done) {
    	 		var imageData = fs.readFileSync('./image/image5.jpg');
-	      	dao.pathModel.addPathImage('/user1/image','image 5.jpg',null,'image/jpg',imageData,function(err,item){
+	      	dao.pathModel.addPathImage('/user1/image','image 5.jpg',null,'image/jpg',imageData,function(err,addedpath){
 	      		should.not.exist(err);
-	      		should.exist(item[0]);
+	      		should.exist(addedpath);
+	      		should.exist(addedpath.type);
+	      		should.not.exist(addedpath.policy)
+	      		dao.pathModel.findPath('/user1/image/image 5.jpg',function(err,path){
+	      			should.not.exist(err);
+	      			should.exist(path);
+	      			should.not.exist(path.policy);
+	      			should.exist(path.image);
+	      			done();
+	      		});
+	      		
+	      	});
+   	 	});
+
+   	 	it('add NAME_CONTAIN_SPACE TWICE /user1/image/image 5.jpg', function(done) {
+   	 		var imageData = fs.readFileSync('./image/image5.jpg');
+	      	dao.pathModel.addPathImage('/user1/image','image 5.jpg',null,'image/jpg',imageData,function(err,addedpath){
+	      		should.not.exist(err);
+	      		should.exist(addedpath);
+	      		should.exist(addedpath.type);
+	      		should.not.exist(addedpath.policy)
 	      		dao.pathModel.findPath('/user1/image/image 5.jpg',function(err,path){
 	      			should.not.exist(err);
 	      			should.exist(path);
@@ -361,9 +385,41 @@ describe('Mongodb PATH test', function() {
 	});
 });
 
+describe('#update img', function() {
+	it('add img /update.jpg', function(done) {
+	 	var imageData = fs.readFileSync('./image/image5.jpg');
+      	dao.pathModel.addPathImage('/','update.jpg',null,'image/jpg',imageData,function(err,addedpath){
+      		should.not.exist(err);
+      		should.exist(addedpath.type);
+      		dao.pathModel.findPath('/update.jpg',function(err,path){
+      			should.not.exist(err);
+      			path.should.not.equal(null);
+      			path.type.should.equal('image/jpg');
+      			path.image.should.equal("e2e21536fefca9cec3b94cc6a5aaae26");
+      			should.not.exist(path.policy);
+      			done();
+      		});      		
+      	});
+	});
 
+	it('update_img /update.jpg', function(done) {
+	 	var imageData = fs.readFileSync('./image/image.jpg');
+      	dao.pathModel.addPathImage('/','update.jpg',null,'image/jpg',imageData,function(err,addedpath){
+      		should.not.exist(err);
+      		should.exist(addedpath.type);
+      		dao.pathModel.findPath('/update.jpg',function(err,path){
+      			should.not.exist(err);
+      			path.should.not.equal(null);
+      			path.type.should.equal('image/jpg');
+      			path.image.should.equal("f3cf7e65f37cede3703957b44065fcb9");
+      			should.not.exist(path.policy);
+      			done();
+      		});      		
+      	});
+	});
+});
 
-describe('#init mongoDAO', function() {
+describe('#mongoDAO close', function() {
 	it('close connect', function(done) {
 	  	dao.finish();
 	  	done();

@@ -5,15 +5,7 @@ var BSON = mongodb.BSON;
 function PathModel(d){
 	var dao = d;
 	this.checkParentURL = function(url,callback){
-		dao.pathModel.findPath(url,function(err,doc){
-			if(err){
-				callback(err,null);return;
-			}else if(doc){
-				callback(null,true);return;
-			}else{
-				callback(null,null);return;
-			}
-		});
+		dao.pathModel.findPath(url,callback);
 	}
 
 	this.addPathFolder = function(parenturl,folderurl,callback){
@@ -26,14 +18,40 @@ function PathModel(d){
 				callback(null,doc);return;
 			}else{
 				var path = {'url':url,type:'folder',image:0,policy:null};
-				dao.pathCollection.insert(path,{safe:true},function(err,result){
-					console.log('insert path = '+path);
-					if(err){
-						callback(err,null);return;
-					}
-					callback(null,result);return;	
-				});	
+				dao.pathCollection.insert(path,{safe:true},callback);	
 			}
+		});
+	}
+
+	this.addPathImageWithoutCheck = function(url,smd5,stype,imageData,callback){
+		dao.imageModel.insertImage(smd5,stype,imageData,function(err,image){
+			if(err){
+				callback(err,null);return;
+			}
+			if(!image){
+				console.log("No err, but return null...")
+				callback(null,null);return;
+			}
+			var path = {'url':url,type:stype,image:image.md5,policy:null};
+			dao.pathCollection.insert(path,{safe:true},callback);	
+		});
+	}
+
+	this.updatePathImageWithoutCheck = function(url,doc,imageData,callback){
+		dao.imageModel.insertImage(doc.image,doc.type,imageData,function(err,image){
+			if(err){
+				callback(err,null);return;
+			}
+			if(!image){
+				console.log("No err, but return null...")
+				callback(null,null);return;
+			}
+			dao.pathCollection.update({_id:doc._id}, doc, {}, function(err, result) {
+				if(err){
+					callback(err,null);return;
+				}
+				dao.pathCollection.findOne({"_id":doc._id,"image":doc.image}, callback);
+			});
 		});
 	}
 
@@ -43,27 +61,35 @@ function PathModel(d){
 		dao.pathModel.findPath(url,function(err,doc){
 			if(err){
 				callback(err,null);return;
-			}else if(doc){
-				callback(null,doc);return;
 			}else{
-				//need to add
-				dao.imageModel.insertImage(smd5,stype,imageData,function(err,image){
-					if(err){
-						callback(err,null);return;
+				if(doc){
+					if(!smd5){
+						smd5 = dao.imageModel.generateMD5(imageData);
 					}
-					if(!image){
-						console.log("No err, but return null...")
-						callback(null,null);return;
-					}
-					var path = {'url':url,type:stype,image:image.md5,policy:null};
-					dao.pathCollection.insert(path,{safe:true},function(err,result){
-						console.log('insert path = '+path);
-						if(err){
-							callback(err,null);return;
+
+					console.log(smd5 + " VS " +doc.image);
+
+					if(smd5==doc.image){
+						callback(null,doc);return;
+					}else{
+						//need to update
+						console.log("Enter update image route!!!");
+						doc.image = smd5;
+						dao.pathModel.updatePathImageWithoutCheck(url,doc,imageData,callback);
+					}				
+				}else{
+					//really need to add
+					dao.pathModel.addPathImageWithoutCheck(url,smd5,stype,imageData,function(err,paths){
+						if(!err){
+							callback(err,paths[0]);
 						}
-						callback(null,result);return;	
-					});	
-				});
+						else{
+							callback(err,paths);
+						}
+					});
+				}
+				
+				
 				
 			}
 		});
