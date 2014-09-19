@@ -66,6 +66,30 @@ $(document).ready(function($) {
 		}		
 	});
 
+	$("#model-newfolder").on('click','#newfolderok',function(event){
+		event.preventDefault();
+		var editbox = $("#model-newfolder").find('#newfoldertext');
+		var foldername = editbox.val();
+		$.ajax({
+			url: '/api/upload/folder',
+			type: 'POST',
+			dataType: 'json',
+			data: {url: foldername,parenturl:current_url},			
+			success: function(data, textStatus, xhr) {
+				//called when successful
+				console.log("success");
+				$('#model-newfolder').modal('hide');
+				editbox.val('');
+				showItemsFromFolder(current_url);
+			},
+			error: function(xhr, textStatus, errorThrown) {
+			    //called when there is an error
+			    console.log("error");
+			}
+		});
+
+	});
+
 
 
 	
