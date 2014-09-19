@@ -3,7 +3,8 @@ var crypto = require('crypto');
 var mongodb = require('mongodb');
 var BSON = mongodb.BSON;
 
-function ImageModel(dao){
+function ImageModel(d){
+		var dao = d;
 		this.insertImageWithoutCheck=function(smd5,stype,imageData,callback){
 			var scontent = new BSON.serialize({bindata:imageData});
 			var tmp1 = {md5:smd5,type:stype,content:scontent};

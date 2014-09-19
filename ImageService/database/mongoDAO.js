@@ -56,7 +56,7 @@ function MongoDAO(){
 					dao.imageModel = new ImageModel(dao);
 
 					dao.policyCollection = results[3];
-					console.log("create collection success...");
+					console.log("db.connect ok...");
 					callback(err);return;				
 				}
 			);

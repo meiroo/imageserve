@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var path = require('path');
-var dao = require('../database/mongoDAO');
+var MongoDAO = require('../database/mongoDAO');
+var util = require('./util');
 
 /* GET users listing. */
 router.post('/', function(req, res) {
@@ -27,9 +28,8 @@ router.post('/', function(req, res) {
         if(req.params.body && req.params.body.parenturl){
         	parenturl = req.params.body.parenturl;
         }else{
-        	console.log("ERRRRRRRRRRRRRRRR");
-            res.status(500).send({ error: 'I need the parenturl parameter!' });
-            res.end();
+            util.sendError(res,'I need the parenturl parameter!');
+            return;
         }
         //console.log(req);
         var chunks=[];
@@ -40,27 +40,33 @@ router.post('/', function(req, res) {
         	//console.log('new chunk!');
         });
         file.on('end',function(){
-        	var imageData = Buffer.concat(chunks,size);
-        	//console.log(imageData);
-        	
-        	dao.pathModel.addPathImage(parenturl,filename,null,'image/jpg',imageData,function(err,item){
-	      		if(err){
-	      			console.log("file-upload addPathImage ERRRRRRRRRRRRRRRR");
-	      			res.status(500).send({ error: 'addPathImage error!'+err });
-                    res.end();
-	      		}
-	      		dao.pathModel.findPath(item[0].url,function(err,path){
-	      			if(path){
-	      				res.status(200).send({ path: item[0]});
-	      				res.end();
-	      			}
-	      			else{
-	      				res.status(500).send({ error: 'cannot find the upload file!' });
-                        res.end();
-	      			}
-	      		});
-	      		
-	      	});
+            var dao = new MongoDAO();
+            dao.init(function(err,results){
+                if(err){
+                    util.sendError(res,err,dao);
+                    return;
+                }
+                var imageData = Buffer.concat(chunks,size);
+            
+                dao.pathModel.addPathImage(parenturl,filename,null,'image/jpg',imageData,function(err,item){
+                    if(err){
+                        util.sendError(res,err,dao);
+                        return;
+                    }
+                    dao.pathModel.findPath(item[0].url,function(err,path){
+                        if(path){
+                            res.status(200).send({ path: item[0]});
+                            res.end();
+                            dao.finish();
+                        }
+                        else{
+                            util.sendError(res,'cannot find the upload file!',dao);
+                            return;
+                        }
+                    });
+                    
+                });
+            });
         	
         });
     });

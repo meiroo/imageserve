@@ -2,7 +2,8 @@ var path = require('path');
 var mongodb = require('mongodb');
 var BSON = mongodb.BSON;
 
-function PathModel(dao){
+function PathModel(d){
+	var dao = d;
 	this.checkParentURL = function(url,callback){
 		dao.pathModel.findPath(url,function(err,doc){
 			if(err){
