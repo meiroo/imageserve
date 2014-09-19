@@ -53,17 +53,9 @@ router.post('/image', function(req, res) {
                         util.sendError(res,err,dao);
                         return;
                     }
-                    dao.pathModel.findPath(item[0].url,function(err,path){
-                        if(path){
-                            res.status(200).send({ path: item[0]});
-                            res.end();
-                            dao.finish();
-                        }
-                        else{
-                            util.sendError(res,'cannot find the upload file!',dao);
-                            return;
-                        }
-                    });
+                    res.status(200).send({ path: item});
+                    res.end();
+                    dao.finish();
                     
                 });
             });
