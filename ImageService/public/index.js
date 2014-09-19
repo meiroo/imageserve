@@ -14,8 +14,8 @@ $(document).ready(function($) {
     	  		//
     	  		//
     	  		li.find(".url").addClass('folderItem');
-    	  		li.find("a img").attr("src","/getpath/image"+"?url="+encodeURIComponent(item.url));
-    	  		li.find(".url").attr('href',"/getpath/image"+"?url="+encodeURIComponent(item.url));
+    	  		li.find("a img").attr("src","/api/path/image"+"?url="+encodeURIComponent(item.url));
+    	  		li.find(".url").attr('href',"/api/path/image"+"?url="+encodeURIComponent(item.url));
     	  	}
     	  	//li.find(".url").attr('href',item.url);
     	  	li.find("a .text .inner").text(item.url);
@@ -32,7 +32,7 @@ $(document).ready(function($) {
 
 	function showItemsFromFolder(url){
 		$.ajax({
-		  url: '/getpath/folder',
+		  url: '/api/path/folder',
 		  type: 'GET',
 		  dataType: 'json',
 		  data: {url: url},
@@ -88,10 +88,6 @@ $(document).ready(function($) {
 		//change the previewTemplate to use Bootstrap progress bars
 		previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
 	  });
-
-		//myDropzone.on("addedfile", function(file) {
-   		//	$("#dropzone").dropzone({ url: '/file-upload?'+ });
-		//});
 
 		myDropzone.on("sending", function(file, xhr, formData) {
   			//alert('sending..')

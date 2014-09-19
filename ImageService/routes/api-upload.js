@@ -6,7 +6,7 @@ var MongoDAO = require('../database/mongoDAO');
 var util = require('./util');
 
 /* GET users listing. */
-router.post('/', function(req, res) {
+router.post('/image', function(req, res) {
 	req.pipe(req.busboy);
 	req.busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
       console.log('Field [' + fieldname + ']: value: ' + val);

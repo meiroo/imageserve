@@ -7,8 +7,8 @@ var bodyParser = require('body-parser');
 var busboy = require('connect-busboy');
 
 var index = require('./routes/index');
-var upload = require('./routes/file-upload');
-var pathapi = require('./routes/pathapi');
+var api_upload = require('./routes/api-upload');
+var api_path = require('./routes/api-path');
 
 //var dtest = require('./database/unittest');
 
@@ -35,7 +35,7 @@ app.use('/', index);
 //         parenturl (upload to which directory)
 //  success return: {path:pathobject}
 //  error return:{error:errmsg}
-app.use('/file-upload', upload);
+app.use('/api/upload', api_upload);
 
 
 //  GET route: /getpath/folder?url=/
@@ -52,7 +52,7 @@ app.use('/file-upload', upload);
 //  success return: image content pipe to request
 //  noneExisted image return:{error:cannot find this image!}
 //  error return:{error:errmsg}
-app.use('/getpath',pathapi);
+app.use('/api/path',api_path);
 
 
 
