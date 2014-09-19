@@ -29,16 +29,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 
-//  POST route: /file-upload
+//  POST route: /api/upload/image
 //  parameter: 
 //         file (from dropzone form)
 //         parenturl (upload to which directory)
 //  success return: {path:pathobject}
 //  error return:{error:errmsg}
+
+//  POST route: /api/upload/folder
+//  parameter: 
+//         foldername (string)
+//         parenturl (add to which directory)
+//  success return: {path:pathobject}
+//  error return:{error:errmsg}
 app.use('/api/upload', api_upload);
 
 
-//  GET route: /getpath/folder?url=/
+//  GET route: /api/path/folder?url=/
 //  parameter:
 //         url (the folder path as:  /user1/image)
 //  success return: {items:[pathobj1,pathobj2,pathobj3...]}
@@ -46,7 +53,7 @@ app.use('/api/upload', api_upload);
 //  error  return:{error:errmsg}
 
 
-//  GET route: /getpath/image?url=/index.gif
+//  GET route: /api/path/image?url=/index.gif
 //  parameter:
 //         url (the image path as /index.gif)
 //  success return: image content pipe to request
