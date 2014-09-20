@@ -11,6 +11,7 @@ function PathModel(d){
 	this.addPathFolder = function(parenturl,folderurl,callback){
 		var url = path.join(parenturl, folderurl);
 		url = url.replace(/\\/g,"/");
+		//url = url.replace(/\/\//g,"/");
 		dao.pathModel.findPath(url,function(err,doc){
 			if(err){
 				callback(err,null);return;

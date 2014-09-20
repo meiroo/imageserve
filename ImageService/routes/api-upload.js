@@ -66,6 +66,7 @@ router.post('/image', function(req, res) {
 
 
 router.post('/folder', function(req, res) {
+    //console.log(req);
     req.pipe(req.busboy);
     req.busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
       console.log('Field [' + fieldname + ']: value: ' + val);
