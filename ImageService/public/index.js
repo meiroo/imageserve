@@ -62,6 +62,8 @@ $(document).ready(function($) {
 			var index = current_url.lastIndexOf('/');
 			current_url = current_url.substring(0,index);
 			//alert(current_url);
+			if(current_url=='')
+				current_url = '/';
 			showItemsFromFolder(current_url);
 		}		
 	});

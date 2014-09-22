@@ -27,6 +27,8 @@ router.post('/image', function(req, res) {
         console.log("req.params.body.parenturl:" + req.params.body.parenturl);
         if(req.params.body && req.params.body.parenturl){
         	parenturl = req.params.body.parenturl;
+            if(req.params.body.filename)
+                filename = req.params.body.filename;
         }else{
             util.sendError(res,'I need the parenturl parameter!');
             return;

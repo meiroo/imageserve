@@ -1,3 +1,4 @@
+
 var path = require('path');
 var mongodb = require('mongodb');
 var BSON = mongodb.BSON;
@@ -156,7 +157,7 @@ function PathModel(d){
 			}else if((folder && folder.type == 'folder')||folderurl=='/'){
 				var re = new RegExp(url,'i');  
 				//url = url.replace(/\\/g,"/");
-				dao.pathCollection.find({'url':re}, callback);
+				dao.pathCollection.find({'url':re},{sort: {'type': 1,'url':1}},callback);
 			}else{
 				//no such folder
 				callback("Cannot find this folder!",null);
