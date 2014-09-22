@@ -97,6 +97,42 @@ function PathModel(d){
 		});
 	}
 
+	this.removePathImageWithoutCheck =  function(url,callback){
+		console.log('removing url:'+url);
+		dao.pathCollection.findAndRemove({url:url},function(err,rmpath){
+			if(err){
+				callback(err,null);return;
+			}else if(rmpath){
+				dao.pathCollection.findOne({image:rmpath.image},function(err,md5path){
+					if(!md5path){
+						console.log('Need to remove image also... md5: '+ rmpath.image);
+						dao.imageModel.removeImage(rmpath.image,function(err,rmimage){
+							callback(err,rmpath);return;
+						})
+					}else{
+						callback(err,rmpath);return;
+					}
+				});
+			}
+		});
+	}
+
+	this.removePathImage = function(url,callback){
+		dao.pathModel.findPath(url,function(err,doc){
+			if(err){
+				callback(err,null);return;
+			}else{
+				if(doc){
+					dao.pathModel.removePathImageWithoutCheck(url,callback);
+					return;	
+				}else{
+					//nothing to delete..
+					callback(null,null);return;
+				}
+			}
+		});
+	}
+
 	this.findImagePathContent = function(url,callback){
 		dao.pathModel.findPath(url,function(err,doc){
 			if(err){

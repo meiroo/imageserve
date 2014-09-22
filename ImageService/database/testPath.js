@@ -419,6 +419,89 @@ describe('#update img', function() {
 	});
 });
 
+describe('#mongoDAO delete', function() {
+	it('delete path and delete image', function(done) {
+	 	var imageData = fs.readFileSync('./image/tobedelete.jpg');
+	 	var imageData2 = fs.readFileSync('./image/image.jpg');
+	  	async.series(
+			[
+				function(callback){dao.pathModel.addPathImage('/user1','delete.jpg',null,'image/gif',imageData,callback);}
+				,function(callback){dao.pathModel.addPathImage('/user1','image.jpg',null,'image/gif',imageData2,callback);}
+			],
+
+			function(err,results){
+				should.not.exist(err);							
+				dao.pathModel.removePathImage('/user1/delete.jpg',function(err,rmpath){
+		      		console.log('enter removePathImage!!!');
+		      		should.not.exist(err);
+		      		console.log(rmpath.image);
+		      		rmpath.image.should.equal('53f8d6e08d2ce6f5a1c6ae2a816cf80d');
+		      		dao.pathModel.findPath('/user1/delete.jpg',function(err,path){
+		      			should.not.exist(err);
+		      			should.not.exist(path);
+		      			dao.imageModel.findImage({md5:'53f8d6e08d2ce6f5a1c6ae2a816cf80d'},function(err,image){
+	      					should.not.exist(err);
+	      					should.not.exist(image);
+	      					done();
+	      				});		      			
+		      		});      		
+				});
+			}
+		);
+	});
+
+
+	it('delete path without delete image(have other path)', function(done) {
+	 	var imageData = fs.readFileSync('./image/tobedelete.jpg');
+	  	async.series(
+			[
+				function(callback){dao.pathModel.addPathImage('/user1','delete.jpg',null,'image/gif',imageData,callback);}
+				,function(callback){dao.pathModel.addPathImage('/user1','delete2.jpg',null,'image/gif',imageData,callback);}
+			],
+
+			function(err,results){
+				should.not.exist(err);							
+				dao.pathModel.removePathImage('/user1/delete.jpg',function(err,rmpath){
+		      		console.log('enter removePathImage!!!');
+		      		should.not.exist(err);
+		      		console.log(rmpath.image);
+		      		rmpath.image.should.equal('53f8d6e08d2ce6f5a1c6ae2a816cf80d');
+		      		dao.pathModel.findPath('/user1/delete.jpg',function(err,path){
+		      			should.not.exist(err);
+		      			should.not.exist(path);
+		      			dao.imageModel.findImage({md5:'53f8d6e08d2ce6f5a1c6ae2a816cf80d'},function(err,image){
+	      					should.not.exist(err);
+	      					should.exist(image);
+	      					image.md5.should.equal('53f8d6e08d2ce6f5a1c6ae2a816cf80d');
+	      					done();
+	      				});		      			
+		      		});      		
+				});
+			}
+		);
+	});
+
+	it('delete path and delete image', function(done) {	 	
+		
+		dao.pathModel.removePathImage('/user1/delete2.jpg',function(err,rmpath){
+      		console.log('enter removePathImage!!!');
+      		should.not.exist(err);
+      		console.log(rmpath.image);
+      		rmpath.image.should.equal('53f8d6e08d2ce6f5a1c6ae2a816cf80d');
+      		dao.pathModel.findPath('/user1/delete2.jpg',function(err,path){
+      			should.not.exist(err);
+      			should.not.exist(path);
+      			dao.imageModel.findImage({md5:'53f8d6e08d2ce6f5a1c6ae2a816cf80d'},function(err,image){
+  					should.not.exist(err);
+  					should.not.exist(image);
+  					done();
+  				});		      			
+      		});      		
+		});		
+	});
+});
+
+
 describe('#mongoDAO close', function() {
 	it('close connect', function(done) {
 	  	dao.finish();

@@ -73,6 +73,10 @@ function ImageModel(d){
 			});
 		}
 
+		this.removeImage = function (md5,callback) {
+			dao.imageCollection.findAndRemove({md5:md5},callback);
+		}
+
 		this.removeAllImage = function(callback){
 			dao.imageCollection.remove(callback);
 		}
