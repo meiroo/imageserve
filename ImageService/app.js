@@ -64,6 +64,8 @@ app.use('/api/path',api_path);
 
 app.use('/api/remove',api_remove);
 
+app.use('/imgapi',api_path);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
