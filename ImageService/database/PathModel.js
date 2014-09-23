@@ -100,7 +100,25 @@ function PathModel(d){
 				url = '^' + url + '/.*$';
 				console.log('using re '+ url);
 				var re = new RegExp(url,'i');
-				dao.pathModel.findAllPath(re,{'type': 1,'url':1},callback);
+				dao.pathModel.findAllPath(re,{'type': 1,'url':1},function(err,arrays){
+					if(err){
+						callback(err,null);return;
+					}else{
+						async.each(arrays, function(item, callback) {
+							console.log('processing path :' + item.url);
+							callback(null,null);
+							
+						},function(err){
+							if(err){
+								callback(err,arrays);return;
+							}else
+							{
+								callback(null,null);return;
+							}
+						});
+
+					}
+				});
 
 			}else{
 				callback(null,null);return;
@@ -292,7 +310,7 @@ function PathModel(d){
 				callback(err,null);return;
 			}else{
 				items.toArray(function(err,array){
-					console.log(array);
+					//console.log(array);
 					callback(err,array);return;
 				});
 			}
@@ -329,6 +347,7 @@ function PathModel(d){
 				var re = new RegExp(url,'i');  
 				//url = url.replace(/\\/g,"/");
 				dao.pathModel.findAllPath(re,{'type': 1,'url':1},callback);
+
 			}else{
 				//no such folder
 				callback("Cannot find this folder!",null);
