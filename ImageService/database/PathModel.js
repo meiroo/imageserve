@@ -61,6 +61,35 @@ function PathModel(d){
 		});
 	}
 
+	this.renamePathFolder = function(url,newname,callback){
+		var oriurl = url;
+		var index = oriurl.lastIndexOf('/');
+		var parenturl = oriurl.substring(0,index);
+		var oriname = oriurl.substring(index+1,oriurl.length);
+		var dsturl = parenturl + '/' + newname;
+		console.log('rename url: '+url +' to '+dsturl);
+		console.log('rename name: '+oriname +' to '+newname);
+
+		if(url=='/'){
+			callback("Cannot renmae / !",null);return;
+		}
+
+		dao.pathModel.findPath(url,function(err,folder){
+			if(err){
+				callback(err,null);return;
+			}else if(folder){
+				var url = oriurl;
+				url = '^' + url + '/.*$';
+				console.log('using re '+ url);
+				var re = new RegExp(url,'i');
+				dao.pathModel.findAllPath(re,{'type': 1,'url':1},callback);
+
+			}else{
+				callback(null,null);return;
+			}
+		});
+	}
+
 	this.removePathFolder = function(url,callback){
 		dao.pathModel.findPath(url,function(err,folder){
 			if(err){
@@ -235,6 +264,20 @@ function PathModel(d){
 		dao.pathCollection.findOne({"url":url}, callback);
 	}
 
+	this.findAllPath = function(url,sort,callback){
+		dao.pathCollection.find({'url':url},{sort: sort},function(err,items){
+			if(err){
+				callback(err,null);return;
+			}else{
+				items.toArray(function(err,array){
+					console.log(array);
+					callback(err,array);return;
+				});
+			}
+		});
+	}
+
+
 	this.findImageByPath = function(url,callback){
 
 	}
@@ -264,15 +307,7 @@ function PathModel(d){
 			}else if((folder && folder.type == 'folder')||folderurl=='/'){
 				var re = new RegExp(url,'i');  
 				//url = url.replace(/\\/g,"/");
-				dao.pathCollection.find({'url':re},{sort: {'type': 1,'url':1}},function(err,items){
-					if(err){
-						callback(err,null);return;
-					}else{
-						items.toArray(function(err,array){
-							callback(err,array);return;
-						});
-					}
-				});
+				dao.pathModel.findAllPath(re,{'type': 1,'url':1},callback);
 			}else{
 				//no such folder
 				callback("Cannot find this folder!",null);

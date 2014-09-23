@@ -558,6 +558,24 @@ describe('once uplaod multify folder /user1/user2/user3', function() {
 	});
 });
 
+describe('rename', function() {
+	it('rename of folder', function(done) {
+		var imageData = fs.readFileSync('./image/tobedelete.jpg');
+	  	async.series(
+			[
+				function(callback){dao.pathModel.addPathImage('/folder1/folder2','rename.jpg',null,'image/gif',imageData,callback);}
+				,function(callback){dao.pathModel.addPathImage('/folder1/folder2','rename2.jpg',null,'image/gif',imageData,callback);}
+			],
+			function(err,results){
+				should.not.exist(err);
+				dao.pathModel.renamePathFolder('/folder1','foldernew',function(err,result){
+					done();
+				});
+
+			});
+	});
+});
+
 describe('#mongoDAO close', function() {
 	it('close connect', function(done) {
 	  	dao.finish();
