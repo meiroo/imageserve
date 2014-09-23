@@ -10,6 +10,24 @@ function PathModel(d){
 		dao.pathModel.findPath(url,callback);
 	}
 
+	this.pathProcess = function(parenturl,folderurl){
+		if(typeof(parenturl) !== "string"
+			|| typeof(folderurl) !== "string"){
+			console.log("ignore url "+parenturl+" "+folderurl+" check for RegExp...");
+			return folderurl;
+		}
+		var url = path.join(parenturl, folderurl);
+		url = url.replace(/\\/g,"/");
+
+		if(url.length>1){
+			if(url.charAt(url.length-1)==='/'){
+				url = url.substring(0,url.length-1);
+			}
+		}
+
+		return url;
+	}
+
 	this.addPathFolderWithoutCheck = function(url,callback){
 		
 		dao.pathModel.findPath(url,function(err,doc){
@@ -26,8 +44,7 @@ function PathModel(d){
 	}
 
 	this.addPathFolder = function(parenturl,folderurl,callback){
-		var url = path.join(parenturl, folderurl);
-		url = url.replace(/\\/g,"/");
+		var url = dao.pathModel.pathProcess(parenturl,folderurl);
 		//url = url.replace(/\/\//g,"/");
 		dao.pathModel.findPath(url,function(err,doc){
 			if(err){
@@ -62,6 +79,7 @@ function PathModel(d){
 	}
 
 	this.renamePathFolder = function(url,newname,callback){
+		var url = dao.pathModel.pathProcess('/',url);
 		var oriurl = url;
 		var index = oriurl.lastIndexOf('/');
 		var parenturl = oriurl.substring(0,index);
@@ -91,6 +109,7 @@ function PathModel(d){
 	}
 
 	this.removePathFolder = function(url,callback){
+		var url = dao.pathModel.pathProcess('/',url);
 		dao.pathModel.findPath(url,function(err,folder){
 			if(err){
 				callback(err,null);return;
@@ -158,8 +177,7 @@ function PathModel(d){
 	}
 
 	this.addPathImage = function(parenturl,imageurl,smd5,stype,imageData,callback){
-		var url = path.join(parenturl, imageurl);
-		url = url.replace(/\\/g,"/");
+		var url = dao.pathModel.pathProcess(parenturl,imageurl);
 		dao.pathModel.findPath(url,function(err,doc){
 			if(err){
 				callback(err,null);return;
@@ -218,6 +236,7 @@ function PathModel(d){
 	}
 
 	this.removePathImage = function(url,callback){
+		var url = dao.pathModel.pathProcess('/',url);
 		dao.pathModel.findPath(url,function(err,doc){
 			if(err){
 				callback(err,null);return;
@@ -234,6 +253,7 @@ function PathModel(d){
 	}
 
 	this.findImagePathContent = function(url,callback){
+		var url = dao.pathModel.pathProcess('/',url);
 		dao.pathModel.findPath(url,function(err,doc){
 			if(err){
 				callback(err,null);return;
@@ -261,10 +281,12 @@ function PathModel(d){
 	}
 
 	this.findPath = function(url,callback){
+		var url = dao.pathModel.pathProcess('/',url);
 		dao.pathCollection.findOne({"url":url}, callback);
 	}
 
 	this.findAllPath = function(url,sort,callback){
+		var url = dao.pathModel.pathProcess('/',url);
 		dao.pathCollection.find({'url':url},{sort: sort},function(err,items){
 			if(err){
 				callback(err,null);return;
@@ -283,7 +305,7 @@ function PathModel(d){
 	}
 
 	this.removeAllPath = function(callback){
-			dao.pathCollection.remove(callback);
+		dao.pathCollection.remove(callback);
 	}
 
 	this.getCount = function(callback){
@@ -291,8 +313,7 @@ function PathModel(d){
 	}
 
 	this.findSubItemByFolder = function(folderurl,callback){
-		
-		var url = folderurl;
+		var url = dao.pathModel.pathProcess('/',folderurl);
 		if(url=='/')
 			url = '^/[^/]+$';
 		else

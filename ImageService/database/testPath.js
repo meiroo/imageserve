@@ -576,6 +576,28 @@ describe('rename', function() {
 	});
 });
 
+describe('get path with /user1/image/',function(){
+	it('get path with /user1/image/', function(done) {
+      	dao.pathModel.addPathFolder('/user1','image/',function(err,path){
+      		should.not.exist(err);
+      		console.log(path);
+      		path.url.should.equal('/user1/image');
+      		dao.pathModel.findPath('/user1/image/',function(err,path){
+      			should.not.exist(err);
+      			path.should.not.equal(null);
+      			path.url.should.equal('/user1/image');
+      			path.type.should.equal('folder');
+      			dao.pathCollection.findOne({"url":'/user1/image/'},function(err,path2){
+	      			should.not.exist(err);
+	      			should.not.exist(path2);
+	      			done();
+	      		});
+      		});
+      		
+      	});
+	 });
+});
+
 describe('#mongoDAO close', function() {
 	it('close connect', function(done) {
 	  	dao.finish();
