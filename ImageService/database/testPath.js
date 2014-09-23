@@ -34,8 +34,9 @@ describe('Mongodb PATH test', function() {
 	describe('add path', function() {
 
 		it('add top folder user1', function(done) {
-	      	dao.pathModel.addPathFolder('/','user1',function(err,callback){
+	      	dao.pathModel.addPathFolder('/','user1',function(err,added){
 	      		should.not.exist(err);
+	      		added.type.should.equal('folder');
 	      		dao.pathModel.findPath('/user1',function(err,path){
 	      			should.not.exist(err);
 	      			path.should.not.equal(null);
@@ -47,8 +48,10 @@ describe('Mongodb PATH test', function() {
    	 	});
 
    	 	it('add folder /user1/image', function(done) {
-	      	dao.pathModel.addPathFolder('/user1','image',function(err,callback){
+	      	dao.pathModel.addPathFolder('/user1','image',function(err,added){
 	      		should.not.exist(err);
+	      		added.type.should.equal('folder');
+	      		added.url.should.equal('/user1/image');
 	      		dao.pathModel.findPath('/user1/image',function(err,path){
 	      			should.not.exist(err);
 	      			path.should.not.equal(null);
@@ -534,6 +537,26 @@ describe('#mongoDAO delete', function() {
 	});
 });
 
+describe('once uplaod multify folder /user1/user2/user3', function() {
+	it('/folder1/folder2', function(done) {
+	  	dao.pathModel.addPathFolder('/','folder1/folder2',function(err,path){
+      		should.not.exist(err);
+      		path.url.should.equal('/folder1/folder2');
+      		path.type.should.equal('folder');
+      		dao.pathModel.findPath('/folder1',function(err,path){
+      			should.not.exist(err);
+      			should.exist(path);
+      			path.type.should.equal('folder');
+      			dao.pathModel.findPath('/folder1/folder2',function(err,path){
+	      			should.not.exist(err);
+	      			path.should.not.equal(null);
+	      			path.type.should.equal('folder');
+	      			done();
+	      		});
+      		});
+      	});
+	});
+});
 
 describe('#mongoDAO close', function() {
 	it('close connect', function(done) {

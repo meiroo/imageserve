@@ -10,6 +10,21 @@ function PathModel(d){
 		dao.pathModel.findPath(url,callback);
 	}
 
+	this.addPathFolderWithoutCheck = function(url,callback){
+		
+		dao.pathModel.findPath(url,function(err,doc){
+			if(err){
+				callback(err,null);return;
+			}else if(doc){
+				callback(null,doc);return;
+			}else{
+				console.log('adding folder path :' + url);
+				var path = {'url':url,type:'folder',image:0,policy:null};
+				dao.pathCollection.insert(path,{safe:true},callback);
+			}
+		})		
+	}
+
 	this.addPathFolder = function(parenturl,folderurl,callback){
 		var url = path.join(parenturl, folderurl);
 		url = url.replace(/\\/g,"/");
@@ -20,8 +35,28 @@ function PathModel(d){
 			}else if(doc){
 				callback(null,doc);return;
 			}else{
-				var path = {'url':url,type:'folder',image:0,policy:null};
-				dao.pathCollection.insert(path,{safe:true},callback);	
+				var patharray=[];
+				var current_url = url;
+				patharray.push(current_url);
+				while(current_url){
+					var index = current_url.lastIndexOf('/');
+					current_url = current_url.substring(0,index);
+					if(current_url)
+						patharray.push(current_url);
+				}
+				patharray = patharray.reverse();
+				console.log(patharray);
+
+				async.each(patharray, function(path, callback) {
+					dao.pathModel.addPathFolderWithoutCheck(path,callback);
+				},function(err){
+					if(err){
+						callback(err,null);return;
+					}else
+					{
+						dao.pathModel.findPath(url,callback);
+					}
+				});
 			}
 		});
 	}

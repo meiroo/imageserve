@@ -28,14 +28,20 @@ $(document).ready(function($) {
     	  		showItemsFromFolder(item.url);
     	  		return true;
     	  	});
-
+    	  	
     	  	li.on('click',".remove",function(event){
     	  		event.preventDefault();
-    	  		if(item.type=='folder'){
-    	  			deleteFolder(item.url);
-    	  		}else{
-    	  			deleteImage(item.url);
-    	  		}
+				var str = $('#model-confirmdelete').modal('show');
+				$('#model-confirmdelete').off('click','#confirmdelete');
+				$('#model-confirmdelete').one('click','#confirmdelete',function(e){
+					e.preventDefault();
+					$('#model-confirmdelete').modal('hide');
+					if(item.type=='folder'){
+    	  				deleteFolder(item.url);
+	    	  		}else{
+	    	  			deleteImage(item.url);
+	    	  		}
+				});    	  		
     	  	});
 	}
 
@@ -76,6 +82,12 @@ $(document).ready(function($) {
 			showItemsFromFolder(current_url);
 		}		
 	});
+
+/*
+	$("#model-confirmdelete").on('click','#confirmdelete',function(event){
+		event.preventDefault();
+
+	});*/
 
 	$("#model-newfolder").on('click','#newfolderok',function(event){
 		event.preventDefault();
