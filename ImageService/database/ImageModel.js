@@ -52,7 +52,7 @@ function ImageModel(d){
 			var md5str = md5.digest('hex');  //MD5值是5f4dcc3b5aa765d61d8327deb882cf99
 			console.log(md5str);
 
-			dao.imageModel.insertImage(md5str,'jpg',imageData,callback);return;
+			dao.imageModel.insertImage(md5str,'saveImageToDB',imageData,callback);return;
 		}
 
 		this.findImage = function(query,callback){

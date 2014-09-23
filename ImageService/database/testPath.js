@@ -187,21 +187,21 @@ describe('Mongodb PATH test', function() {
 					dao.pathModel.findSubItemByFolder('/user1',function(err,items){
 		   	 			should.not.exist(err);
 		   	 			var itemarrays = [];
-		   	 			items.toArray(function(err,items){
-		   	 				for(var item in items){
-		   	 					itemarrays.push(items[item].url);
-		   	 					console.log(items[item].url);
-		   	 				}
-		   	 				itemarrays.should.containEql('/user1/image');
-		   	 				itemarrays.should.not.containEql('/user1/image/image3');
-		   	 				itemarrays.should.not.containEql('/user1');
-		   	 				itemarrays.should.containEql('/user1/image--');
-		   	 				itemarrays.should.containEql('/user1/image__');
-		   	 				itemarrays.should.containEql('/user1/--image__');
-		   	 				itemarrays.should.containEql('/user1/im-a-g_e__');
-		   	 				itemarrays.should.containEql('/user1/image0123');
-		   	 				done();
-		   	 			});
+		   	 			
+	   	 				for(var item in items){
+	   	 					itemarrays.push(items[item].url);
+	   	 					console.log(items[item].url);
+	   	 				}
+	   	 				itemarrays.should.containEql('/user1/image');
+	   	 				itemarrays.should.not.containEql('/user1/image/image3');
+	   	 				itemarrays.should.not.containEql('/user1');
+	   	 				itemarrays.should.containEql('/user1/image--');
+	   	 				itemarrays.should.containEql('/user1/image__');
+	   	 				itemarrays.should.containEql('/user1/--image__');
+	   	 				itemarrays.should.containEql('/user1/im-a-g_e__');
+	   	 				itemarrays.should.containEql('/user1/image0123');
+	   	 				done();
+		   	 			
 		   	 			
 		   	 		});
 				}
@@ -225,19 +225,19 @@ describe('Mongodb PATH test', function() {
 					dao.pathModel.findSubItemByFolder('/user1/image',function(err,items){
 		   	 			should.not.exist(err);
 		   	 			var itemarrays = [];
-		   	 			items.toArray(function(err,items){
-		   	 				for(var item in items){
-		   	 					itemarrays.push(items[item].url);
-		   	 					console.log(items[item].url);
-		   	 				}
-		   	 				itemarrays.should.containEql('/user1/image/image3');
-		   	 				itemarrays.should.containEql('/user1/image/aa.jpg');
-		   	 				itemarrays.should.containEql('/user1/image/__image--');
-		   	 				itemarrays.should.containEql('/user1/image/b__--b123.jpg');
-		   	 				itemarrays.should.not.containEql('/user1');
-		   	 				itemarrays.should.not.containEql('/user1/image/image3/bb.jpg');
-		   	 				done();
-		   	 			});
+		   	 			
+	   	 				for(var item in items){
+	   	 					itemarrays.push(items[item].url);
+	   	 					console.log(items[item].url);
+	   	 				}
+	   	 				itemarrays.should.containEql('/user1/image/image3');
+	   	 				itemarrays.should.containEql('/user1/image/aa.jpg');
+	   	 				itemarrays.should.containEql('/user1/image/__image--');
+	   	 				itemarrays.should.containEql('/user1/image/b__--b123.jpg');
+	   	 				itemarrays.should.not.containEql('/user1');
+	   	 				itemarrays.should.not.containEql('/user1/image/image3/bb.jpg');
+	   	 				done();
+		   	 			
 		   	 			
 		   	 		});
 				}
@@ -261,18 +261,18 @@ describe('Mongodb PATH test', function() {
 					dao.pathModel.findSubItemByFolder('/',function(err,items){
 		   	 			should.not.exist(err);
 		   	 			var itemarrays = [];
-		   	 			items.toArray(function(err,items){
-		   	 				for(var item in items){
-		   	 					itemarrays.push(items[item].url);
-		   	 					console.log(items[item].url);
-		   	 				}
-		   	 				itemarrays.should.containEql('/user1');
-		   	 				itemarrays.should.containEql('/user23-_');
-		   	 				itemarrays.should.containEql('/index.gif');
-		   	 				itemarrays.should.not.containEql('/user1/image');
-		   	 				itemarrays.should.not.containEql('/');
-		   	 				done();
-		   	 			});
+		   	 			
+	   	 				for(var item in items){
+	   	 					itemarrays.push(items[item].url);
+	   	 					console.log(items[item].url);
+	   	 				}
+	   	 				itemarrays.should.containEql('/user1');
+	   	 				itemarrays.should.containEql('/user23-_');
+	   	 				itemarrays.should.containEql('/index.gif');
+	   	 				itemarrays.should.not.containEql('/user1/image');
+	   	 				itemarrays.should.not.containEql('/');
+	   	 				done();
+		   	 			
 		   	 			
 		   	 		});
 				}
@@ -496,6 +496,39 @@ describe('#mongoDAO delete', function() {
   					should.not.exist(image);
   					done();
   				});		      			
+      		});      		
+		});		
+	});
+
+	it('delete folder and subitems', function(done) {	 	
+		
+		dao.pathModel.removePathFolder('/user1',function(err,rmpath){
+      		should.not.exist(err);
+      		rmpath.type.should.equal('folder');
+      		dao.pathModel.findPath('/user1',function(err,path){
+      			should.not.exist(err);
+      			should.not.exist(path);	
+      			dao.pathModel.findPath('/user1/image.jpg',function(err,path){
+	      			should.not.exist(err);
+	      			should.not.exist(path);	  
+	      			dao.pathModel.findPath('/user1/image',function(err,path){
+		      			should.not.exist(err);
+		      			should.not.exist(path);	 
+		      			dao.pathModel.findPath('/user1/image/aa.jpg',function(err,path){
+			      			should.not.exist(err);
+			      			should.not.exist(path);	  
+			      			dao.pathModel.findPath('/user1/image/image3',function(err,path){
+				      			should.not.exist(err);
+				      			should.not.exist(path);
+				      			dao.pathModel.findPath('/user1/image/image3/bb.jpg',function(err,path){
+					      			should.not.exist(err);
+					      			should.not.exist(path);	 
+					      			done();     			
+					      		});  	      			
+				      		});       			
+			      		});     			
+		      		});     			
+	      		});       			
       		});      		
 		});		
 	});

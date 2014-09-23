@@ -2,6 +2,7 @@
 var path = require('path');
 var mongodb = require('mongodb');
 var BSON = mongodb.BSON;
+var async = require('async');
 
 function PathModel(d){
 	var dao = d;
@@ -21,6 +22,41 @@ function PathModel(d){
 			}else{
 				var path = {'url':url,type:'folder',image:0,policy:null};
 				dao.pathCollection.insert(path,{safe:true},callback);	
+			}
+		});
+	}
+
+	this.removePathFolder = function(url,callback){
+		dao.pathModel.findPath(url,function(err,folder){
+			if(err){
+				callback(err,null);return;
+			}else if(folder){
+				dao.pathModel.findSubItemByFolder(url,function(err,items){
+					if(err){
+						callback(err,null);return;
+					}else{
+						console.log('items:' + items);
+						async.each(items, function(item, callback) {
+							console.log('processing path :' + item.url);
+							if(item.type=='folder'){
+						  		dao.pathModel.removePathFolder(item.url,callback);
+						  	}else{
+						  		dao.pathModel.removePathImage(item.url,callback);
+						  	}
+						},function(err){
+							if(err){
+								callback(err,folder);return;
+							}else
+							{
+								console.log('url:'+url + ' Finally, remove the parent folder..');
+								dao.pathCollection.findAndRemove({url:url},callback);
+								return;
+							}
+						});
+					}
+				});
+			}else{
+				callback(null,null);return;
 			}
 		});
 	}
@@ -98,7 +134,7 @@ function PathModel(d){
 	}
 
 	this.removePathImageWithoutCheck =  function(url,callback){
-		console.log('removing url:'+url);
+		console.log('removing image :'+url);
 		dao.pathCollection.findAndRemove({url:url},function(err,rmpath){
 			if(err){
 				callback(err,null);return;
@@ -193,7 +229,15 @@ function PathModel(d){
 			}else if((folder && folder.type == 'folder')||folderurl=='/'){
 				var re = new RegExp(url,'i');  
 				//url = url.replace(/\\/g,"/");
-				dao.pathCollection.find({'url':re},{sort: {'type': 1,'url':1}},callback);
+				dao.pathCollection.find({'url':re},{sort: {'type': 1,'url':1}},function(err,items){
+					if(err){
+						callback(err,null);return;
+					}else{
+						items.toArray(function(err,array){
+							callback(err,array);return;
+						});
+					}
+				});
 			}else{
 				//no such folder
 				callback("Cannot find this folder!",null);

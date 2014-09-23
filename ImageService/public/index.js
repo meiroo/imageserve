@@ -28,6 +28,15 @@ $(document).ready(function($) {
     	  		showItemsFromFolder(item.url);
     	  		return true;
     	  	});
+
+    	  	li.on('click',".remove",function(event){
+    	  		event.preventDefault();
+    	  		if(item.type=='folder'){
+    	  			deleteFolder(item.url);
+    	  		}else{
+    	  			deleteImage(item.url);
+    	  		}
+    	  	});
 	}
 
 	function showItemsFromFolder(url){
@@ -91,6 +100,46 @@ $(document).ready(function($) {
 		});
 
 	});
+
+	function deleteFolder(url){
+		$.ajax({
+		  url: '/api/remove/folder',
+		  type: 'DELETE',
+		  dataType: 'json',
+		  data: {url: url},
+		  complete: function(xhr, textStatus) {
+		    //called when complete
+		  },
+		  success: function(data, textStatus, xhr) {
+		    //called when successful
+		    showItemsFromFolder(current_url);
+		  },
+		  error: function(xhr, textStatus, errorThrown) {
+		    //called when there is an error
+		    alert(errorThrown);
+		  }
+		});
+	}
+
+	function deleteImage(url){
+		$.ajax({
+		  url: '/api/remove/image',
+		  type: 'DELETE',
+		  dataType: 'json',
+		  data: {url: url},
+		  complete: function(xhr, textStatus) {
+		    //called when complete
+		  },
+		  success: function(data, textStatus, xhr) {
+		    //called when successful
+		    showItemsFromFolder(current_url);
+		  },
+		  error: function(xhr, textStatus, errorThrown) {
+		    //called when there is an error
+		    alert(errorThrown);
+		  }
+		});
+	}
 
 
 

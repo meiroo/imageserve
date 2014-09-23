@@ -9,6 +9,7 @@ var busboy = require('connect-busboy');
 var index = require('./routes/index');
 var api_upload = require('./routes/api-upload');
 var api_path = require('./routes/api-path');
+var api_remove = require('./routes/api-remove');
 
 //var dtest = require('./database/unittest');
 
@@ -61,7 +62,7 @@ app.use('/api/upload', api_upload);
 //  error return:{error:errmsg}
 app.use('/api/path',api_path);
 
-
+app.use('/api/remove',api_remove);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

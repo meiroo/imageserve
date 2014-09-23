@@ -24,20 +24,15 @@ router.get('/folder', function(req, res) {
  			if(err){
  				util.sendError(res,err,dao);
             	return;
- 			}else{
- 				items.toArray(function(err,itemarray){
-	 				if(err){
-	 					util.sendError(res,err,dao);
-		            	return;
-	 				}
-	 				res.send({items:itemarray});
-	 				res.end();
-	 				dao.finish();
- 				});
- 			}
-
- 			
- 			
+ 			}else{ 				
+ 				if(err){
+ 					util.sendError(res,err,dao);
+	            	return;
+ 				}
+ 				res.send({items:items});
+ 				res.end();
+ 				dao.finish(); 				
+ 			} 			
  		});        
 	});	
 });
