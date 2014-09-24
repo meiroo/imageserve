@@ -36,7 +36,8 @@ router.delete('/folder', function(req, res) {
 	 				util.sendError(res,err,dao);
 	            	return;
 	 			}else{
-	 				res.send({path:rmpath});
+	 				console.log('delete folder return:'+JSON.stringify(rmpath));
+	 				res.send(JSON.stringify(rmpath));
 	 				res.end();
 	 				dao.finish();
 	 			}
@@ -74,7 +75,8 @@ router.delete('/image', function(req, res) {
 	 				util.sendError(res,err,dao);
 	            	return;
 	 			}else{
-	 				res.send({path:rmpath});
+	 				console.log('delete image return:'+JSON.stringify(rmpath));
+	 				res.send(JSON.stringify(rmpath));
 	 				res.end();
 	 				dao.finish();
 	 			}      		    		

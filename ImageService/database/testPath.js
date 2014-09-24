@@ -565,11 +565,44 @@ describe('rename', function() {
 		[
 			function(callback){dao.pathModel.addPathImage('/folder1/folder2','rename.jpg',null,'image/gif',imageData,callback);}
 			,function(callback){dao.pathModel.addPathImage('/folder1/folder2','rename2.jpg',null,'image/gif',imageData,callback);}
+			, function(callback){dao.pathModel.addPathFolder('/','/folder123',callback);}
+			, function(callback){dao.pathModel.addPathFolder('/','/folder1/folder1/',callback);}
+
+
 		],
 		function(err,results){
 			should.not.exist(err);
 			dao.pathModel.renamePathFolder('/folder1','foldernew',function(err,result){
-				done();
+				console.log(result);
+				result.url.should.equal('/foldernew');
+				dao.pathModel.findPath('/folder1',function(err,path){
+	      			should.not.exist(err);
+	      			should.not.exist(path);
+	      			dao.pathModel.findPath('/foldernew',function(err,path){
+		      			should.not.exist(err);
+		      			should.exist(path);
+		      			path.type.should.equal('folder');
+		      			dao.pathModel.findPath('/folder123',function(err,path){
+			      			should.not.exist(err);
+			      			should.exist(path);
+			      			path.type.should.equal('folder');
+			      			dao.pathModel.findPath('/foldernew/folder1',function(err,path){
+			      				should.not.exist(err);
+			      				should.exist(path);
+				      			path.type.should.equal('folder');
+				      			dao.pathModel.findPath('/foldernew/folder2',function(err,path){
+				      				should.exist(path);
+				      				dao.pathModel.findPath('/foldernew/folder2/rename.jpg',function(err,path){
+					      				should.not.exist(err);
+					      				should.exist(path);
+						      			done();
+						      		});
+				      			});
+				      			
+				      		});
+			      		});
+		      		});
+	      		});
 			});
 
 		});

@@ -105,15 +105,36 @@ function PathModel(d){
 						callback(err,null);return;
 					}else{
 						async.each(arrays, function(item, callback) {
-							console.log('processing path :' + item.url);
-							callback(null,null);
+							//console.log('processing path :' + item.url);
+
+							var restr = '^' + oriurl+'/';
+							console.log('renaming from :'+item.url);
+							var re = new RegExp(restr,'i');
+							item.url = item.url.replace(re,dsturl+'/');
+							console.log('renaming to :'+item.url);
+
+							dao.pathCollection.update({_id:item._id}, item, {}, callback);
 							
 						},function(err){
 							if(err){
 								callback(err,arrays);return;
 							}else
 							{
-								callback(null,null);return;
+								var restr = '^' + oriurl+'$';
+								//console.log('rename re:'+ url);
+								var re = new RegExp(restr,'i');
+								console.log('renaming from :'+folder.url);
+								folder.url = folder.url.replace(re,dsturl);
+								console.log('renaming to :'+folder.url);
+
+								dao.pathCollection.update({_id:folder._id}, folder, {}, function(err,result){
+									if(err){
+										callback(err,result);return;
+									}else{
+										dao.pathCollection.findOne({_id:folder._id}, callback);
+									}
+								});
+								
 							}
 						});
 
@@ -300,6 +321,7 @@ function PathModel(d){
 
 	this.findPath = function(url,callback){
 		var url = dao.pathModel.pathProcess('/',url);
+		//console.log('findPath url : '+url);
 		dao.pathCollection.findOne({"url":url}, callback);
 	}
 

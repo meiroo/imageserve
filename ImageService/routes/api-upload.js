@@ -55,10 +55,10 @@ router.post('/image', function(req, res) {
                         util.sendError(res,err,dao);
                         return;
                     }
-                    res.status(200).send({ path: item});
+                    console.log('post image return: '+JSON.stringify(item));
+                    res.status(200).send(JSON.stringify(item));
                     res.end();
-                    dao.finish();
-                    
+                    dao.finish();                    
                 });
             });
         	
@@ -100,7 +100,8 @@ router.post('/folder', function(req, res) {
                     util.sendError(res,err,dao);
                     return;
                 }
-                res.send({item:item[0]});
+                console.log('post folder return: '+ JSON.stringify(item));
+                res.send(JSON.stringify(item));
                 res.end();
                 dao.finish();
                 /*

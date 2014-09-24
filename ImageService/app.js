@@ -10,6 +10,7 @@ var index = require('./routes/index');
 var api_upload = require('./routes/api-upload');
 var api_path = require('./routes/api-path');
 var api_remove = require('./routes/api-remove');
+var api_update = require('./routes/api-update');
 
 //var dtest = require('./database/unittest');
 
@@ -61,6 +62,8 @@ app.use('/api/upload', api_upload);
 //  noneExisted image return:{error:cannot find this image!}
 //  error return:{error:errmsg}
 app.use('/api/path',api_path);
+
+app.use('/api/update',api_update);
 
 app.use('/api/remove',api_remove);
 
