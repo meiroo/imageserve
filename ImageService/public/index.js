@@ -59,7 +59,7 @@ $(document).ready(function($) {
 		    current_url = url;
 		    $.get('/template/image-ul-li.html', null, function(htmldata, textStatus, xhr) {
 		    	$(".page-content-area ul").empty();
-		    	$.each(data.items, function(index,item) {		    	
+		    	$.each(data, function(index,item) {		    	
 		    		showSingleItem(item,htmldata);
 		    	});
 			});

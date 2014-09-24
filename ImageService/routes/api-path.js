@@ -4,14 +4,16 @@ var MongoDAO = require('../database/mongoDAO');
 var path = require('path');
 var should = require('should');
 var stream = require("stream");
-var util = require('./util');
+var util = require('../util');
 
 
 function getFolder(req,res,dao){	
-	console.log(req.query);
+	console.log('--------------------------------');
+	console.log('GET /api/path/folder/');
 	var url = '/';
 	if(req.query.url)
 		url = req.query.url;
+	console.log("url = "+url);
 
 	dao.pathModel.findSubItemByFolder(url,function(err,items){
 		if(err){
@@ -21,8 +23,9 @@ function getFolder(req,res,dao){
 			if(err){
 				util.sendError(res,err,dao);
         		return;
-			}
-			res.send({items:items});
+			}			
+			console.log('res.send: '+ JSON.stringify(items));
+			res.send(JSON.stringify(items));
 			res.end();
 			dao.finish(); 				
 		} 			
@@ -30,11 +33,12 @@ function getFolder(req,res,dao){
 }
 
 function getImage(req,res,dao){		
-	console.log(req.query);
+	console.log('--------------------------------');
+	console.log('GET /api/path/image/');
 	var url = '/';
 	if(req.query.url)
 		url = req.query.url;
-	console.log("****get image path******url= "+url);
+	console.log("url= "+url);
 	dao.pathModel.findImagePathContent(url,function(err,imagedata){
 		if(err){
 			util.sendError(res,err,dao);
@@ -80,7 +84,8 @@ router.get('/image', function(req, res) {
 router.get('/(*)',function(req,res){
 	var url = req.params[0];
 	req.query.url = '/'+url;
-	console.log('path: '+ req.query.url);
+	console.log('--------------------------------');
+	console.log('GET /imgapi/'+url);
 	
 	var dao = new MongoDAO();
 	dao.init(function(err,results){

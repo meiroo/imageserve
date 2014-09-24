@@ -13,7 +13,7 @@ function PathModel(d){
 	this.pathProcess = function(parenturl,folderurl){
 		if(typeof(parenturl) !== "string"
 			|| typeof(folderurl) !== "string"){
-			console.log("ignore url "+parenturl+" "+folderurl+" check for RegExp...");
+			//console.log("ignore url "+parenturl+" "+folderurl+" check for RegExp...");
 			return folderurl;
 		}
 		var url = path.join(parenturl, folderurl);
@@ -297,7 +297,6 @@ function PathModel(d){
 			if(err){
 				callback(err,null);return;
 			}else if(doc){
-				console.log('---------find image content-------');
 				dao.imageModel.findImage({md5:doc.image},function(err,image){
 		      		if(err){
 		      			callback(err,null);return;
@@ -306,7 +305,7 @@ function PathModel(d){
 		      			var content = new BSON.deserialize(image.content.buffer);
 		      			var imagedata = content.bindata.buffer;
 		      			//console.log(imagedata);
-		      			console.log('return image content data...');
+		      			console.log('return image md5='+doc.image);
 		      			callback(null,imagedata);return;
 
 		      		}else{
@@ -358,9 +357,6 @@ function PathModel(d){
 			url = '^/[^/]+$';
 		else
 			url = '^' + url + '/[^/]+$';
-
-		console.log(url);
-		console.log('------------');
 
 		dao.pathModel.findPath(folderurl,function(err,folder){
 			if(err){

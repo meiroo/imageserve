@@ -12,18 +12,18 @@ function MongoDAO(){
 		this.server = new mongodb.Server('172.16.50.221','27017', {auto_reconnect:true,sslKey:'yusure',sslPass:'yusure'});
 		this.db = new mongodb.Db('ECXService',this.server,{safe:true});
 		assert(this.server && this.db);
-		console.log('ECXService database connected...');
+		//console.log('ECXService database connected...');
 		callback(null);return;
 	}
 
 	this.createCollection = function(callback){
-		console.log('begin create collection.')
+		//console.log('begin create collection.')
 		if(!this.db){
 			callback({errmsg:"should connect first!"},null);return;
 		}
 		this.db.open(function(err, db){
 			if(err){
-				console.log("Nooooooo! log open err! "+ err);
+				console.error("ERRRRRRRRRRRRRR! log open err! "+ err);
 				callback(err);return;
 			}
 			async.series(
@@ -47,7 +47,7 @@ function MongoDAO(){
 
 				function(err,results){
 					if(err){
-						console.log("Nooooooo! "+ err);
+						console.error("ERRRRRRRRRRRR! "+ err);
 						callback(err);return;
 					}
 					dao.userCollection = results[0];
@@ -68,8 +68,8 @@ function MongoDAO(){
 
 	this.init = function(callback){
 		//console.log(this);
-		console.log('-----------');
-		console.log('-----------');
+		//console.log('-----------');
+		//console.log('-----------');
 		//console.log(dao);
 		async.series(
 			[

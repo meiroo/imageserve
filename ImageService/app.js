@@ -5,12 +5,14 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var busboy = require('connect-busboy');
-
+var fs = require('fs');
 var index = require('./routes/index');
 var api_upload = require('./routes/api-upload');
 var api_path = require('./routes/api-path');
 var api_remove = require('./routes/api-remove');
 var api_update = require('./routes/api-update');
+var log = require('./log');  
+
 
 //var dtest = require('./database/unittest');
 
@@ -20,9 +22,14 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+// setup the logger
+//var accessLogStream = fs.createWriteStream(__dirname + '/access.log', {flags: 'a'});
+//app.use(logger('dev', {stream: accessLogStream}))
 app.use(logger('dev'));
+log.use(app);
+
+
+
 //app.use(bodyParser.urlencoded({ extended: false }));
 //app.use(bodyParser.json());
 app.use(busboy()); 

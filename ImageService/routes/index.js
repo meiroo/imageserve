@@ -7,8 +7,8 @@ var dao = new MongoDAO();
 router.get('/', function(req, res) {
 	dao.init(function(err,results){
 		if(err)
-			res.sendfile(404);
-        res.sendfile(path.join(__dirname, '../public/gallery.html'));
+			res.sendFile(404);
+        res.sendFile(path.join(__dirname, '../public/gallery.html'));
 	});
 	
 });

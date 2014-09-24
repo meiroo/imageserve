@@ -4,23 +4,24 @@ var MongoDAO = require('../database/mongoDAO');
 var path = require('path');
 var should = require('should');
 var stream = require("stream");
-var util = require('./util');
+var util = require('../util');
 
 
 router.delete('/folder', function(req, res) {
     //console.log(req);
+    console.log('--------------------------------');
+	console.log('DELETE /api/remove/folder/');
+
     req.pipe(req.busboy);
     req.busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
       console.log('Field [' + fieldname + ']: value: ' + val);
       if(!req.params.body){
         req.params.body = {};
-        console.log('initialize params.body...');
       }
       req.params.body[fieldname] = val;
     });
 
     req.busboy.on('finish', function() {
-        console.log('Done parsing form!');
         var dao = new MongoDAO();
 		dao.init(function(err,results){
 			if(err){
@@ -36,7 +37,7 @@ router.delete('/folder', function(req, res) {
 	 				util.sendError(res,err,dao);
 	            	return;
 	 			}else{
-	 				console.log('delete folder return:'+JSON.stringify(rmpath));
+	 				console.log('res.send:'+JSON.stringify(rmpath));
 	 				res.send(JSON.stringify(rmpath));
 	 				res.end();
 	 				dao.finish();
@@ -48,18 +49,19 @@ router.delete('/folder', function(req, res) {
 
 router.delete('/image', function(req, res) {
     //console.log(req);
+    console.log('--------------------------------');
+	console.log('DELETE /api/remove/image/');
+
     req.pipe(req.busboy);
     req.busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
       console.log('Field [' + fieldname + ']: value: ' + val);
       if(!req.params.body){
         req.params.body = {};
-        console.log('initialize params.body...');
       }
       req.params.body[fieldname] = val;
     });
 
     req.busboy.on('finish', function() {
-        console.log('Done parsing form!');
         var dao = new MongoDAO();
 		dao.init(function(err,results){
 			if(err){
@@ -75,7 +77,7 @@ router.delete('/image', function(req, res) {
 	 				util.sendError(res,err,dao);
 	            	return;
 	 			}else{
-	 				console.log('delete image return:'+JSON.stringify(rmpath));
+	 				console.log('res.send:'+JSON.stringify(rmpath));
 	 				res.send(JSON.stringify(rmpath));
 	 				res.end();
 	 				dao.finish();
