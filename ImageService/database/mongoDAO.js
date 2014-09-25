@@ -9,7 +9,7 @@ function MongoDAO(){
 	var dao = this;
 	this.connect =function(callback){
 		var err = false;
-		this.server = new mongodb.Server('172.16.50.221','27017', {auto_reconnect:true,sslKey:'yusure',sslPass:'yusure'});
+		this.server = new mongodb.Server('10.4.4.130','25244', {auto_reconnect:true,sslKey:'meiroo@outlook.com',sslPass:'meiro1412'});
 		this.db = new mongodb.Db('ECXService',this.server,{safe:true});
 		assert(this.server && this.db);
 		//console.log('ECXService database connected...');
@@ -29,7 +29,7 @@ function MongoDAO(){
 			async.series(
 				[
 					function(callback){
-						db.authenticate('yusure','yusure', callback);
+						db.authenticate('meiroo@outlook.com','meiro1412', callback);
 					},
 					function(callback){
 						db.createCollection('user', {safe:true},callback);
