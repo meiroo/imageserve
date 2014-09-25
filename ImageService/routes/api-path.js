@@ -82,7 +82,8 @@ router.get('/image', function(req, res) {
 });
 
 router.get('/(*)',function(req,res){
-	var url = req.params[0];
+	var url = req.params[0]; 
+	
 	req.query.url = '/'+url;
 	console.log('--------------------------------');
 	console.log('GET /imgapi/'+url);
