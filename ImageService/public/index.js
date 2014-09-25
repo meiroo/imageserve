@@ -2,6 +2,34 @@ $(document).ready(function($) {
 
 	var current_url = '/';
 
+	var $overflow = '';
+	var colorbox_params = {
+		rel: 'colorbox',
+		reposition:true,
+		scalePhotos:true,
+		scrolling:true,
+		previous:'<i class="ace-icon fa fa-arrow-left"></i>',
+		next:'<i class="ace-icon fa fa-arrow-right"></i>',
+		close:'&times;',
+		current:'{current} of {total}',
+		maxWidth:'100%',
+		maxHeight:'100%',
+		onOpen:function(){
+			$overflow = document.body.style.overflow;
+			document.body.style.overflow = 'hidden';
+		},
+		onClosed:function(){
+			document.body.style.overflow = $overflow;
+		},
+		onComplete:function(){
+			$.colorbox.resize();
+		}
+	};
+
+	//$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+	$("#cboxLoadingGraphic").html("<i class='ace-icon fa fa-spinner orange'></i>");//let's add a custom loading icon
+
+
 	function showSingleItem(item,data){
     	  	var li = $('<li></li>');
     	  	li.html(data);
@@ -21,7 +49,7 @@ $(document).ready(function($) {
     	  	li.find("a .text .inner").text(item.url);
     	  	  
     	  	$(".page-content-area ul").append(li);
-    	  	$(".cboxElement").colorbox({ rel: 'colorbox' });
+    	  	$(".cboxElement").colorbox(colorbox_params);
 
     	  	li.on('click',".folder",function(event){
     	  		event.preventDefault();
@@ -201,5 +229,7 @@ $(document).ready(function($) {
 	} catch(e) {
 	  alert('Dropzone.js does not support older browsers!');
 	}
+
+	
 
 });
