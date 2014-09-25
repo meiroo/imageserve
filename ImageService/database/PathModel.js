@@ -10,6 +10,18 @@ function PathModel(d){
 		dao.pathModel.findPath(url,callback);
 	}
 
+	this.validatePath = function(url){
+		if(typeof(url)!=="string"){
+			return "invalid url: NOT STRING.";
+		}
+		var re = /^[^*?%$#@)(<>+^\n\t]+$/;
+		if(!url.match(re)){
+			return 'contain iNVALID CHRACTOR *?%$#@)(<>+^...';
+		}
+
+		return null;
+	}
+
 	this.pathProcess = function(parenturl,folderurl){
 		if(typeof(parenturl) !== "string"
 			|| typeof(folderurl) !== "string"){
@@ -44,6 +56,14 @@ function PathModel(d){
 	}
 
 	this.addPathFolder = function(parenturl,folderurl,callback){
+		
+		var err1 = dao.pathModel.validatePath(parenturl);
+		var err2 = dao.pathModel.validatePath(folderurl);
+		if(err1 || err2){
+			callback(err1 + ' '+err2,null);
+			return;
+		}
+
 		var url = dao.pathModel.pathProcess(parenturl,folderurl);
 		//url = url.replace(/\/\//g,"/");
 		dao.pathModel.findPath(url,function(err,doc){
@@ -216,6 +236,14 @@ function PathModel(d){
 	}
 
 	this.addPathImage = function(parenturl,imageurl,smd5,stype,imageData,callback){
+		
+		var err1 = dao.pathModel.validatePath(parenturl);
+		var err2 = dao.pathModel.validatePath(imageurl);
+		if(err1 || err2){
+			callback(err1 + ' '+err2,null);
+			return;
+		}
+		
 		var url = dao.pathModel.pathProcess(parenturl,imageurl);
 		dao.pathModel.findPath(url,function(err,doc){
 			if(err){

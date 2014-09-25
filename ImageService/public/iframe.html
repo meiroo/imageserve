@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>IFrame test</title>
+<meta charset="utf-8">
+
+<style type="text/css">
+html, body {
+width: 100%;
+height: 100%;
+margin: 0;
+padding: 0;
+overflow: hidden;
+background: #eee;
+}
+#container {
+display: block;
+width: 100%;
+height: 100%;
+background: #222;
+position: absolute;
+z-index: 2;
+text-align: center;
+margin:0;
+}
+#input {
+	width: 600px;
+	height: 40px;
+	color: #333;
+	background-color: #ccc;
+	padding: 0;
+	padding-left: 10px;
+	margin-top: 50px;
+	border: none;
+	outline: none;
+	outline-color: black;
+	font-size: 16px;
+	top:10%;
+	color: #FF6666;
+	z-index: 1;
+}
+#iframe{
+	margin-top: 50px;
+	width:800px;
+	height:500px; 
+	border:2px #ff6666;
+}
+</style>
+</head>
+<body>
+<div id="container">
+<input id='input' type="text" value="" autocorrect="off" spellcheck="false" autocomplete="off"/>
+<iframe id="iframe" src="http://localhost:3000"></iframe>
+</div>
+</body>
+</html>

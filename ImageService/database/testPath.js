@@ -631,6 +631,76 @@ describe('get path with /user1/image/',function(){
 	 });
 });
 
+describe('special charactor...', function() {
+	it('add folder aa*******', function(done) {
+	  	dao.pathModel.addPathFolder('/user1','aa*****',function(err,path){
+      		should.exist(err);
+      		console.log(err);
+      		should.not.exist(path);
+      		done();      		
+      	});
+	});
+
+	it('add folder aa(($', function(done) {
+	  	dao.pathModel.addPathFolder('/user1','aa(($',function(err,path){
+      		should.exist(err);
+      		console.log(err);
+      		should.not.exist(path);
+      		done();      		
+      	});
+	});
+
+	it('add folder aa%', function(done) {
+	  	dao.pathModel.addPathFolder('/user1','aa%',function(err,path){
+      		should.exist(err);
+      		console.log(err);
+      		should.not.exist(path);
+      		done();      		
+      	});
+	});
+
+	it('add image aa*.jpg', function(done) {
+		var imageData = fs.readFileSync('./image/tobedelete.jpg');
+	  	dao.pathModel.addPathImage('/user1/','aa*.jpg',null,'image/gif',imageData,function(err,path){
+      		should.exist(err);
+      		console.log(err);
+      		should.not.exist(path);
+      		done();      		
+      	});
+	});
+
+	it('add image aa?.jpg', function(done) {
+		var imageData = fs.readFileSync('./image/tobedelete.jpg');
+	  	dao.pathModel.addPathImage('/user1/','aa?.jpg',null,'image/gif',imageData,function(err,path){
+      		should.exist(err);
+      		console.log(err);
+      		should.not.exist(path);
+      		done();      		
+      	});
+	});
+
+	it('add image aa%.jpg', function(done) {
+		var imageData = fs.readFileSync('./image/tobedelete.jpg');
+	  	dao.pathModel.addPathImage('/user1/','aa%.jpg',null,'image/gif',imageData,function(err,path){
+      		should.exist(err);
+      		console.log(err);
+      		should.not.exist(path);
+      		done();      		
+      	});
+	});
+
+	it('find path  aa%.jpg', function(done) {
+		dao.pathModel.findPath('/user1/aa%.jpg',function(err,path){
+      		should.not.exist(err);
+      		console.log(err);
+      		console.log(path);
+      		should.not.exist(path);
+      		done();      		
+      	});
+	});
+});
+		
+
 describe('#mongoDAO close', function() {
 	it('close connect', function(done) {
 	  	dao.finish();
