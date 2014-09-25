@@ -112,7 +112,10 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-app.set('port', process.env.PORT || 3000);
+var port = (process.env.VMC_APP_PORT || 3000); 
+var host = (process.env.VCAP_APP_HOST || 'localhost'); 
+
+app.set('port', port);
 
 
 var server = app.listen(app.get('port'), function () {
