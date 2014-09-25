@@ -12,7 +12,8 @@ var api_path = require('./routes/api-path');
 var api_remove = require('./routes/api-remove');
 var api_update = require('./routes/api-update');
 var log = require('./log');  
-
+var port = (process.env.VMC_APP_PORT || 3000); 
+var host = (process.env.VCAP_APP_HOST || 'localhost'); 
 
 //var dtest = require('./database/unittest');
 
@@ -112,14 +113,10 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-var port = (process.env.VMC_APP_PORT || 3000); 
-var host = (process.env.VCAP_APP_HOST || 'localhost'); 
+
 
 app.set('port', port);
 
 
-var server = app.listen(app.get('port'), function () {
-    
-    console.log('Express server listening on http://localhost:' + server.address().port);
-});
+app.listen(port,host);
 
