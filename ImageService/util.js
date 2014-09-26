@@ -1,5 +1,4 @@
 var dao = require('./database/mongoDAO');
-var log = require('./log');
 
 var Util = {};
 
@@ -17,10 +16,6 @@ Util.logError = function(err,callback){
 	console.error('ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR:\n'+err);
 	if(callback)
 		callback(err,null);
-}
-
-Util.log = function(string){
-	log.logger.info(string);
 }
 
 

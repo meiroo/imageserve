@@ -11,7 +11,6 @@ var api_upload = require('./routes/api-upload');
 var api_path = require('./routes/api-path');
 var api_remove = require('./routes/api-remove');
 var api_update = require('./routes/api-update');
-var log = require('./log');  
 var port = (process.env.VMC_APP_PORT || 3000); 
 var host = (process.env.VCAP_APP_HOST || 'localhost'); 
 
@@ -27,8 +26,6 @@ app.set('view engine', 'jade');
 //var accessLogStream = fs.createWriteStream(__dirname + '/access.log', {flags: 'a'});
 //app.use(logger('dev', {stream: accessLogStream}))
 app.use(logger('dev'));
-log.use(app);
-
 
 
 //app.use(bodyParser.urlencoded({ extended: false }));
