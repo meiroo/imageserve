@@ -130,7 +130,6 @@ $(document).ready(function($) {
 				//called when successful
 				console.log("success");
 				$('#model-newfolder').modal('hide');
-				editbox.val('');
 				showItemsFromFolder(current_url);
 			},
 			error: function(xhr, textStatus, errorThrown) {
@@ -138,6 +137,7 @@ $(document).ready(function($) {
 			    console.log("error");
 			}
 		});
+		editbox.val('');
 
 	});
 

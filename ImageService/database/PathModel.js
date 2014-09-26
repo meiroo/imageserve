@@ -6,17 +6,31 @@ var async = require('async');
 
 function PathModel(d){
 	var dao = d;
+
 	this.checkParentURL = function(url,callback){
 		dao.pathModel.findPath(url,callback);
+	}
+
+	this.addMainURL = function(callback){
+		dao.pathCollection.findOne({url:'/'}, function(err,result){
+			if(err){
+				callback(err,null);return;
+			}else if(result){
+				callback(null,result);return;
+			}else{
+				var path = {'url':'/',type:'folder',image:0,policy:null};
+				dao.pathCollection.insert(path,{safe:true},callback);
+			}
+		});
 	}
 
 	this.validatePath = function(url){
 		if(typeof(url)!=="string"){
 			return "invalid url: NOT STRING.";
 		}
-		var re = /^[^*?%$#@)(<>+^\n\t]+$/;
+		var re = /^[^*?%$#@<>^\n\t]+$/;
 		if(!url.match(re)){
-			return 'contain iNVALID CHRACTOR *?%$#@)(<>+^...';
+			return 'contain iNVALID CHRACTOR *?%$#@<>^...';
 		}
 
 		return null;
@@ -37,6 +51,8 @@ function PathModel(d){
 			}
 		}
 
+		url = url.toLowerCase();
+		//console.log("url process:"+url);
 		return url;
 	}
 
@@ -331,10 +347,14 @@ function PathModel(d){
 		      		}else if(image){
 		      			
 		      			var content = new BSON.deserialize(image.content.buffer);
-		      			var imagedata = content.bindata.buffer;
+		      			//console.log(content);
+		      			var result = {};
+		      			result.imagedata = content.bindata.buffer;
+		      			result.url = doc.url;
+		      			result.type = doc.type;
 		      			//console.log(imagedata);
 		      			console.log('return image md5='+doc.image);
-		      			callback(null,imagedata);return;
+		      			callback(null,result);return;
 
 		      		}else{
 		      			callback(null,null);return;
@@ -365,6 +385,21 @@ function PathModel(d){
 			}
 		});
 	}
+
+	this.findAllFolder = function(url,sort,callback){
+		var url = dao.pathModel.pathProcess('/',url);
+		dao.pathCollection.find({'url':url,'type':'folder'},{sort: sort},function(err,items){
+			if(err){
+				callback(err,null);return;
+			}else{
+				items.toArray(function(err,array){
+					//console.log(array);
+					callback(err,array);return;
+				});
+			}
+		});
+	}
+
 
 
 	this.findImageByPath = function(url,callback){

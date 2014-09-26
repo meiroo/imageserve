@@ -39,15 +39,23 @@ function getImage(req,res,dao){
 	if(req.query.url)
 		url = req.query.url;
 	console.log("url= "+url);
-	dao.pathModel.findImagePathContent(url,function(err,imagedata){
+	dao.pathModel.findImagePathContent(url,function(err,result){
 		if(err){
 			util.sendError(res,err,dao);
     		return;
 		}
-		if(imagedata){
+		if(result){
 			// Initiate the source
+			var filename = "";
+			var url = result.url;
+			if(url.match(/[^/]+$/))
+				filename = url.match(/[^/]+$/);
+			res.setHeader('Content-Type', result.type); 
+			res.setHeader('content-disposition', "attachment; filename="+encodeURIComponent(filename)); 
+			console.log("res.header Content-Type:" + result.type + " " + 'content-disposition:' + "attachment; filename="+filename); 
+
 			var bufferStream = new stream.Transform();
-			bufferStream.push(imagedata);
+			bufferStream.push(result.imagedata);
 			bufferStream.pipe(res);
 			bufferStream.end();
 			dao.finish();

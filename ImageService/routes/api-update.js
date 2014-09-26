@@ -8,7 +8,7 @@ var util = require('../util');
 router.put('/folder', function(req, res) {
     //console.log(req);
     console.log('--------------------------------');
-    console.log('PUT /api/update/image/');
+    console.log('PUT /api/update/folder/');
 
     req.pipe(req.busboy);
     req.busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {

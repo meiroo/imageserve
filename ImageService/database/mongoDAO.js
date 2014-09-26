@@ -78,6 +78,9 @@ function MongoDAO(){
 				},
 				function(callback){
 					dao.createCollection(callback);
+				},
+				function(callback){
+					dao.pathModel.addMainURL(callback);
 				}
 			],
 

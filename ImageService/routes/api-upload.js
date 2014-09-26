@@ -18,8 +18,10 @@ router.post('/image', function(req, res) {
       }
       req.params.body[fieldname] = val;
     });
-    req.busboy.on('file', function (fieldname, file, filename) {
+
+    req.busboy.on('file', function (fieldname, file, filename,encoding,mimetype) {
         console.log("Uploading: " + filename); 
+        console.log("mimetype:"+mimetype);
         
         var extName = path.extname(filename);
         console.log(extName);
@@ -52,7 +54,7 @@ router.post('/image', function(req, res) {
                 }
                 var imageData = Buffer.concat(chunks,size);
             
-                dao.pathModel.addPathImage(parenturl,filename,null,'image/jpg',imageData,function(err,item){
+                dao.pathModel.addPathImage(parenturl,filename,null,mimetype,imageData,function(err,item){
                     if(err){
                         util.sendError(res,err,dao);
                         return;

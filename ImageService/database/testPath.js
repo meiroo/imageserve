@@ -29,6 +29,28 @@ describe('Mongodb PATH test', function() {
 	      	});
 	      	
     	});
+
+    describe('#init mongoDAO', function() {
+		it('error:get collection without connect', function(done) {
+	      	dao.init(function(err,result){
+	      		should.not.exist(err);
+	      		done();
+	      	});
+   	 	});
+ 	});
+
+    	/*it('add Main URL...', function(done) {
+		dao.pathModel.addMainURL(function(err,result){
+			should.not.exist(err);		
+			dao.pathCollection.findOne({url:'/'}, function(err,result){
+				should.not.exist(err);
+				should.exist(result);
+				result.url.should.equal('/');
+				done();
+			});
+			
+		});
+	});*/
 	});
 
 	describe('add path', function() {
@@ -37,7 +59,7 @@ describe('Mongodb PATH test', function() {
 	      	dao.pathModel.addPathFolder('/','user1',function(err,added){
 	      		should.not.exist(err);
 	      		added.type.should.equal('folder');
-	      		dao.pathModel.findPath('/user1',function(err,path){
+	      		dao.pathModel.findPath('/USER1',function(err,path){
 	      			should.not.exist(err);
 	      			path.should.not.equal(null);
 	      			path.type.should.equal('folder');
@@ -47,7 +69,7 @@ describe('Mongodb PATH test', function() {
 	      	});
    	 	});
 
-   	 	it('add folder /user1/image', function(done) {
+   	 	it('add folder /user1/iMAge', function(done) {
 	      	dao.pathModel.addPathFolder('/user1','image',function(err,added){
 	      		should.not.exist(err);
 	      		added.type.should.equal('folder');
@@ -283,10 +305,10 @@ describe('Mongodb PATH test', function() {
    	 	});
 
 		it('find img content exists', function(done) {
-   	 		dao.pathModel.findImagePathContent('/user1/image/image3/bb.jpg',function(err,imagedata){
+   	 		dao.pathModel.findImagePathContent('/user1/image/image3/bb.jpg',function(err,result){
       			should.not.exist(err);
-      			imagedata.should.not.equal(null);
-      			console.log(imagedata);
+      			result.imagedata.should.not.equal(null);
+      			console.log(result.imagedata);
       			done();
       		});
    	 	});
@@ -567,6 +589,8 @@ describe('rename', function() {
 			,function(callback){dao.pathModel.addPathImage('/folder1/folder2','rename2.jpg',null,'image/gif',imageData,callback);}
 			, function(callback){dao.pathModel.addPathFolder('/','/folder123',callback);}
 			, function(callback){dao.pathModel.addPathFolder('/','/folder1/folder1/',callback);}
+			, function(callback){dao.pathModel.addPathFolder('/','/tmp1/tmp2/tmp3/tmp4/',callback);}
+			, function(callback){dao.pathModel.addPathFolder('/','/tmp1/tmp2/tmp3-2/tmp4-2/',callback);}
 
 
 		],
@@ -641,11 +665,10 @@ describe('special charactor...', function() {
       	});
 	});
 
-	it('add folder aa(($', function(done) {
-	  	dao.pathModel.addPathFolder('/user1','aa(($',function(err,path){
-      		should.exist(err);
-      		console.log(err);
-      		should.not.exist(path);
+	it('add folder aa(1)', function(done) {
+	  	dao.pathModel.addPathFolder('/user1','aa(1)',function(err,path){
+      		should.not.exist(err);
+      		should.exist(path);
       		done();      		
       	});
 	});
@@ -679,6 +702,16 @@ describe('special charactor...', function() {
       	});
 	});
 
+	it('add image aa(123).jpg', function(done) {
+		var imageData = fs.readFileSync('./image/tobedelete.jpg');
+	  	dao.pathModel.addPathImage('/user1/','aa(123).jpg',null,'image/jpg',imageData,function(err,path){
+      		should.not.exist(err);
+      		console.log(err);
+      		should.exist(path);
+      		done();      		
+      	});
+	});
+
 	it('add image aa%.jpg', function(done) {
 		var imageData = fs.readFileSync('./image/tobedelete.jpg');
 	  	dao.pathModel.addPathImage('/user1/','aa%.jpg',null,'image/gif',imageData,function(err,path){
@@ -698,6 +731,58 @@ describe('special charactor...', function() {
       		done();      		
       	});
 	});
+
+	it('get tree by folder', function(done) {
+      	
+      	var url = '/';
+      	if(url=='/')
+			url = '^/.*$';
+		else
+			url = '^' + url + '/.*$';
+		var re = new RegExp(url,'i'); 
+  		dao.pathModel.findAllFolder(re,null,function(err,arrays){
+      		should.not.exist(err);
+      		console.log(arrays);
+      		should.exist(arrays);
+
+      		function checkin(ele){
+      			for( i in arrays){
+      				if(arrays[i].url === ele)
+      					return true;
+      			}
+      			console.log('false:'+ele);
+      			return false;
+      		}
+      		
+      		async.each(arrays, function(item, callback) {
+					//console.log('processing path :' + item.url);
+				console.log(item.url);
+				var parent = null;
+				var name = null;
+
+				if(item.url==='/'){
+					name = 'Main /';
+				}else{
+					var re = /(.*\/)([^/]+)/i
+					var result = item.url.match(re);
+					//console.log(result);
+					parent = result[1];
+					if(parent.length > 1)
+						parent = parent.substring(0,parent.length-1);
+					name = result[2];
+
+					checkin(parent).should.equal(true);		
+				}
+				console.log('parent : '+parent + ' name: ' + name);
+				callback(null);
+					
+				
+			},function(err){
+				should.not.exist(err);
+				done();
+			});						   		
+      	});
+ 	});
 });
 		
 
