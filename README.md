@@ -1,44 +1,36 @@
-#ECXServeice
+# node-js-getting-started
 
+A barebones Node.js app using [Express 4](http://expressjs.com/).
 
-Current API----------------------------------
-  POST route: /api/upload/image
-  parameter: 
-         file (from dropzone form)
-         parenturl (upload to which directory)
-  success return: {path:pathobject}
-  error return:{error:errmsg}
+This application support the [Getting Started with Node on Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs) article - check it out.
 
-  POST route: /api/upload/folder
-  parameter: 
-         foldername (string)
-         parenturl (add to which directory)
-  success return: {path:pathobject}
-  error return:{error:errmsg}
+## Running Locally
 
-  GET route: /api/path/folder?url=/
-  parameter:
-         url (the folder path as:  /user1/image)
-  success return: {items:[pathobj1,pathobj2,pathobj3...]}
-  noneExisted folder return: {error:cannot find this folder!}
-  error  return:{error:errmsg}
+Make sure you have [Node.js](http://nodejs.org/) and the [Heroku Toolbelt](https://toolbelt.heroku.com/) installed.
 
+```sh
+$ git clone git@github.com:heroku/node-js-getting-started.git # or clone your own fork
+$ cd node-js-getting-started
+$ npm install
+$ npm start
+```
 
-  GET route: /api/path/image?url=/index.gif
-  parameter:
-         url (the image path as /index.gif)
-  success return: image content pipe to request
-  noneExisted image return:{error:cannot find this image!}
-  error return:{error:errmsg}
+Your app should now be running on [localhost:5000](http://localhost:5000/).
 
----------------------------------------------------------------
+## Deploying to Heroku
 
-mongodb reference
-http://mongodb.github.io/node-mongodb-native/contents.html#
+```
+$ heroku create
+$ git push heroku master
+$ heroku open
+```
 
-node reference
-http://shouce.w3cfuns.com/nodejs/all.html
+## Documentation
 
-mongodb dao rewrited.
-Now:
-request->new connection->process->close connection -> response
+For more information about using Node.js on Heroku, see these Dev Center articles:
+
+- [Getting Started with Node.js on Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs)
+- [Heroku Node.js Support](https://devcenter.heroku.com/articles/nodejs-support)
+- [Node.js on Heroku](https://devcenter.heroku.com/categories/nodejs)
+- [Best Practices for Node.js Development](https://devcenter.heroku.com/articles/node-best-practices)
+- [Using WebSockets on Heroku with Node.js](https://devcenter.heroku.com/articles/node-websockets)

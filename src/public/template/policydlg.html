@@ -1,0 +1,54 @@
+<div id="model-policy" ms-controller="PolicyDlg" class="widget-main modal in" aria-hidden="true" style="display: none;">
+	<div class="modal-dialog" style="width:70%;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title">Please select the Policy to process.</h4>
+			</div>
+			<div class="modal-body" >
+				<div style="text-align: center;" class="side-by-side clearfix">
+	            <em>策略处理队列：</em>
+	            <select style="width:90%;" id="policy1" data-placeholder="点击按顺序选择策略：" style="width:350px;" multiple>
+	                <optgroup label="缩略图">
+	                  <option>"thumbnail","size":150</option>
+	                  <option>"thumbnail","size":100</option>
+	                  <option>"thumbnail","size":500</option>
+	                <optgroup>
+	                <optgroup label="水印">
+	                  <option>"watermark","text":"waterMARK"</option>
+	                  <option>"watermark","text":"**^%^","color":"#FF0000AA","gravity":"West"</option>
+	                  <option>"watermark","text":"111不准盗用","rotate":"-30","color":"#FFFFFFDD"</option>
+	                <optgroup>										             
+	              </select>
+	            <br>
+				<em>选择组合策略：</em>
+	              <select style="width:90%;" id="policy2" data-placeholder="选择组合策略：" style="margin:10px 0px; width:350px;" >
+	                <optgroup label="组合策略">
+	                  <option>template</option>
+	                </optgroup>
+	              </select>
+				
+					<h1 > Covnert Preview: </h1>
+		            <a ms-href="img1href" 
+		            style="border-style:solid;width: 35%;height:35%;display: table-cell;vertical-align:middle;text-align: center;" 
+		            data-rel="colorbox" class="cboxElement url">
+						<img ms-src="img1src" style="max-width: 100%;max-height: 100%;">
+					</a>
+
+					<h1 style="display:table-cell;"> Into: </h1>
+					
+					<a ms-href="img2href"
+					style="border-style:solid;width: 35%;height:35%;display: table-cell;vertical-align:middle;text-align: center;" 
+					data-rel="colorbox" class="cboxElement url">
+						<img ms-src="img2src" style="max-width: 100%;max-height: 100%;">
+					</a>
+				
+				</div>										            
+			</div>
+			<div class="modal-footer">
+				<button data-bb-handler="cancel" type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+				<button id="newfolderok" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,36 @@
+<div>
+
+<p>
+<button class="btn btn-primary" ng-click="onUploadClick($event)" data-toggle="modal" data-target="#model-upload">
+	<i class="ace-icon fa fa-cloud-upload align-top bigger-150"></i>
+	Upload
+</button>
+
+<button class="btn btn-primary btn-yellow" data-toggle="modal" data-target="#model-newfolder">
+	<i class="ace-icon fa  fa-folder align-top bigger-150"></i>
+	New Folder
+</button>
+</p>
+
+<ul class="ace-thumbnails clearfix">
+	<li  ng-repeat="item in array">
+		<a style="width: 150px;height:150px;display: table-cell;vertical-align:middle;text-align: center;"
+		 data-rel="colorbox" ng-class="{'cboxElement':item.toggleCBox }" ng-href="{{item.href}}" ng-click="item.click($event,item)">
+			<img ng-src="{{item.imgsrc}}" style="max-width: 150px;max-height: 150px;">
+
+			<div class="text">
+				<div class="inner">{{item.url}}</div>
+			</div>
+		</a>
+		<div class="tools tools-bottom">
+			<a ng-click="item.clickPolicy($event,item)" ng-show="item.togglePolicy" href="#">
+				<i class="policy ace-icon fa fa-link"></i>
+			</a>
+
+			<a ng-click="item.clickDelete($event,item)" href="#">
+				<i class="remove ace-icon fa fa-times red"></i>
+			</a>
+		</div>
+	</li>									
+</ul>
+</div>
