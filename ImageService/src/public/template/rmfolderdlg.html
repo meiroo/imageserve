@@ -1,0 +1,16 @@
+<div id="model-rmfolder" ng-controller="rmfolderController" class="widget-main modal in" aria-hidden="true" style="display: none;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				<button type="button" class="bootbox-close-button close" 
+					data-dismiss="modal" aria-hidden="true" style="margin-top: -10px;">×</button>
+				<div class="bootbox-body">Are you sure?
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button data-bb-handler="cancel" type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+				<button ng-click="confirm($event,item)" data-bb-handler="confirm" type="button" class="btn btn-primary">OK</button>
+			</div>
+		</div>
+	</div>
+</div>
